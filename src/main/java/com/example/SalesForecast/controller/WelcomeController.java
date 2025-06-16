@@ -11,12 +11,13 @@ public class WelcomeController {
     @GetMapping("/welcome")
     public String welcome(Model model, HttpSession session) {
         String username = (String) session.getAttribute("username");
-
+        String email = (String) session.getAttribute("email");
         if (username == null) {
             return "redirect:/"; // 未ログインで直接来たら戻す
         }
 
         model.addAttribute("username", username);
+        model.addAttribute("email", email);
         return "welcome";
     }
 

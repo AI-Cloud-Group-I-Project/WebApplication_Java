@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 <link rel="stylesheet" th:href="@{/css/style.css}">
+
 <body>
-<h1 th:text="'Username: ' + ${username} + ' さん、こんにちは！'">ようこそ</h1>
-<form action="/logout" method="post">
-    <button type="submit">ログアウト</button>
-</form>
+    <h1 th:text="'Username: ' + ${username} + ' さん、こんにちは！(' + ${email} + ')'">ようこそ</h1>
+    <form action="/logout" method="post">
+        <button type="submit">ログアウト</button>
+    </form>
 </body>
+
 </html>
