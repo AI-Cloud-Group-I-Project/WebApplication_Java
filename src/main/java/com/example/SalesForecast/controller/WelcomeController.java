@@ -1,4 +1,4 @@
-package com.example.Login_Spring_Boot.controller;
+package com.example.SalesForecast.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

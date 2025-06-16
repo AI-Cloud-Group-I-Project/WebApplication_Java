@@ -1,4 +1,4 @@
-package com.example.Login_Spring_Boot.model;
+package com.example.SalesForecast.model;
 
 import jakarta.persistence.*;
 
