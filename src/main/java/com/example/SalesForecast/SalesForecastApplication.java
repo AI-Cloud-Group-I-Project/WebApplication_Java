@@ -1,13 +1,13 @@
-package com.example.Login_Spring_Boot;
+package com.example.SalesForecast;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LoginSpringBootApplication {
+public class SalesForecastApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(LoginSpringBootApplication.class, args);
+		SpringApplication.run(SalesForecastApplication.class, args);
 	}
 
 }

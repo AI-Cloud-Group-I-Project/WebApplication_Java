@@ -1,6 +1,6 @@
-package com.example.Login_Spring_Boot.repository;
+package com.example.SalesForecast.repository;
 
-import com.example.Login_Spring_Boot.model.Users;
+import com.example.SalesForecast.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 // LoginSpringBootRepository.java

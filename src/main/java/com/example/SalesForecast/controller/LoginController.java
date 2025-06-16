@@ -1,6 +1,6 @@
-package com.example.Login_Spring_Boot.controller;
+package com.example.SalesForecast.controller;
 
-import com.example.Login_Spring_Boot.service.LoginService;
+import com.example.SalesForecast.service.LoginService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

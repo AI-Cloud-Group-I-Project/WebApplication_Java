@@ -1,4 +1,4 @@
-package com.example.Login_Spring_Boot.util;
+package com.example.SalesForecast.util;
 import java.security.MessageDigest;
 
 public class PasswordUtil {

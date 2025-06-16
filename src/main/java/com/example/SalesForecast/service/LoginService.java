@@ -1,8 +1,8 @@
-package com.example.Login_Spring_Boot.service;
+package com.example.SalesForecast.service;
 
-import com.example.Login_Spring_Boot.model.Users;
-import com.example.Login_Spring_Boot.repository.LoginSpringBootRepository;
-import com.example.Login_Spring_Boot.util.PasswordUtil;
+import com.example.SalesForecast.model.Users;
+import com.example.SalesForecast.repository.LoginSpringBootRepository;
+import com.example.SalesForecast.util.PasswordUtil;
 
 import org.springframework.stereotype.Service;
 
