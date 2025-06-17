@@ -1,6 +1,6 @@
 
 
-/* -------- 主题颜色定义 -------- */
+/* -------- 色 -------- */
 :root {
   --primary-color: #1abc9c;
   --primary-dark: #16a085;
@@ -22,7 +22,7 @@ body {
   color: var(--text-color);
 }
 
-/* -------- 左侧菜单 -------- */
+/* -------- 一覧表 -------- */
 .sidebar {
   width: 220px;
   background-color: var(--bg-color);
@@ -61,13 +61,13 @@ body {
   display: block;
 }
 
-/* -------- 主内容区域 -------- */
+/* -------- MAIN-------- */
 .main-content {
   flex: 1;
   background-color: var(--bg-color);
 }
 
-/* -------- 顶部栏 -------- */
+/* -------- TOP -------- */
 .topbar {
   width: 100%;
   background-color: white;
@@ -110,7 +110,7 @@ body {
   background-color: #ccc;
 }
 
-/* -------- 区块标题 -------- */
+/* --------TITLE -------- */
 .section-container {
   background-color: var(--white);
   margin: 30px 40px;
@@ -126,7 +126,7 @@ body {
   margin-bottom: 20px;
 }
 
-/* -------- 表单样式（已调整宽度） -------- */
+/* -------- フォーム -------- */
 .stock-form .form-grid {
   display: flex;
   flex-wrap: wrap;
@@ -154,7 +154,7 @@ body {
 }
 
 
-/* -------- 按钮组 -------- */
+/* -------- ボタン -------- */
 .button-row {
   margin-top: 30px;
   display: flex;
@@ -188,7 +188,7 @@ body {
   opacity: 0.9;
 }
 
-/* -------- 商品在庫一覧表格 -------- */
+/* -------- 商品在庫一覧表 -------- */
 .product-table {
   width: 100%;
   border-collapse: separate;
@@ -217,7 +217,7 @@ body {
   background-color: #f9f9f9;
 }
 
-/* -------- 响应式支持 -------- */
+/* -------- INTERRATIVE  -------- */
 @media (max-width: 768px) {
   .sidebar {
     display: none;

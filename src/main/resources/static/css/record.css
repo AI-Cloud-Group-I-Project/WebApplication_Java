@@ -1,4 +1,4 @@
-/* -------- 主题颜色定义 -------- */
+/* -------- 色 -------- */
 :root {
   --primary-color: #1abc9c;
   --primary-dark: #16a085;
@@ -20,7 +20,7 @@ body {
   color: var(--text-color);
 }
 
-/* -------- 左侧菜单 -------- */
+/* -------- 一覧表 -------- */
 .sidebar {
   width: 220px;
   background-color: var(--bg-color);
@@ -35,12 +35,12 @@ body {
 }
 .menu-title {
   font-weight: bold;
-  font-size: 18px; /* 增大字体 */
+  font-size: 18px; 
   margin: 20px 20px 10px;
-  text-align: left; /* 左对齐 */
+  text-align: left; 
 }
 .menu li {
-  padding: 23px 20px; /* 原本是12px，这里上下间隔扩大 */
+  padding: 23px 20px; 
   transition: background 0.3s;
   font-size: 15px;
 }
@@ -60,14 +60,14 @@ body {
   display: block;
 }
 
-/* -------- 主内容区域 -------- */
+/* -------- MAIN -------- */
 .main-content {
   flex: 1;
   padding: 20px 40px;
   background-color: var(--bg-color);
 }
 
-/* -------- 顶部栏 -------- */
+/* --------TOP -------- */
 .topbar {
   width: 100%;
   background-color: white;
@@ -116,7 +116,7 @@ body {
 }
 
 
-/* -------- section 标题 -------- */
+/* -------- section TITLE -------- */
 .main-content h2 {
   font-size: 20px;
   border-left: 6px solid var(--primary-color);
@@ -125,7 +125,7 @@ body {
   margin-bottom: 15px;
 }
 
-/* -------- 日历 -------- */
+/* -------- カレンダー -------- */
 .calendar-section {
   background-color: var(--white);
   border-radius: 8px;
@@ -194,7 +194,7 @@ body {
   padding: 5px;
 }
 
-/* -------- 商品情報区块 -------- */
+/* -------- 商品情報 -------- */
 .product-section {
   background-color: var(--white);
   padding: 20px;
@@ -203,7 +203,7 @@ body {
   margin-bottom: 30px;
 }
 
-/* -------- 表格 -------- */
+/* -------- フォーム-------- */
 .product-table {
   width: 100%;
   border-collapse: separate;
@@ -238,7 +238,7 @@ body {
   border-radius: 4px;
 }
 
-/* -------- 按钮组 -------- */
+/* -------- ボタン -------- */
 .button-row {
   margin-top: 30px;
   display: flex;
@@ -277,7 +277,7 @@ body {
   opacity: 0.9;
 }
 
-/* -------- 响应式支持 -------- */
+/* -------- INTERRATIVE -------- */
 @media (max-width: 768px) {
   .sidebar {
     display: none;
