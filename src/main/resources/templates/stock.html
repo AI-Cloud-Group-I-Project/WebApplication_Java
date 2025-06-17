@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>商品入荷と在庫ページ</title>
+  <link rel="stylesheet" th:href="@{/css/stock.css}">
+</head>
+<body>
+  <!-- 左侧菜单 -->
+  <div class="sidebar">
+    <div class="menu-title">メニュー一覧</div>
+    <ul class="menu">
+      <li><a href="#">実績と天気の確認</a></li>
+      <li><a href="#">ユーザー管理</a></li>
+      <li><a href="#">販売実績入力</a></li>
+      <li><a href="#">需要予測</a></li>
+      <li><a href="#">商品管理</a></li>
+      <li class="active"><a href="#">入荷と在庫管理</a></li>
+    </ul>
+  </div>
+
+
+  <!-- 主体内容 -->
+  <div class="main-content">
+    <div class="topbar">
+      <div class="brand">H&C BAR</div>
+      <div class="topbar-right">
+        <span class="username">高橋 由美子</span>
+        <button class="logout-btn">Log out</button>
+      </div>
+    </div>
+
+
+    <div class="section-container">
+      <h2>商品入荷入力（2025.5.31）</h2>
+      <form class="stock-form">
+        <div class="form-grid">
+          <div>
+            <label>銘柄</label>
+            <input type="text" placeholder="例: ホワイトビール">
+          </div>
+          <div>
+            <label>入荷数量</label>
+            <input type="number" placeholder="例: 20">
+          </div>
+          <div>
+            <label>JANコード</label>
+            <input type="text" placeholder="例: 4901234567894">
+          </div>
+        </div>
+        <div class="button-row">
+          <button class="btn add" type="button">Add</button>
+          <button class="btn submit" type="submit">Submit</button>
+          <button class="btn export" type="button">Edit</button>
+        </div>
+      </form>
+    </div>
+
+
+    <div class="section-container">
+      <h2>商品在庫一覧</h2>
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>銘柄</th>
+            <th>現在在庫（数量）</th>
+            <th>直近入荷日</th>
+            <th>JANコード</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ホワイトビール</td>
+            <td>36</td>
+            <td>2025.5.31</td>
+            <td>4901234567894</td>
+          </tr>
+          <tr>
+            <td>ラガー</td>
+            <td>48</td>
+            <td>2025.5.31</td>
+            <td>4901234567890</td>
+          </tr>
+          <tr>
+            <td>ペールエール</td>
+            <td>29</td>
+            <td>2025.5.31</td>
+            <td>4897054380143</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
