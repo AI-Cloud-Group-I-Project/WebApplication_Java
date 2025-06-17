@@ -8,15 +8,17 @@
 // @Component
 // public class ForecastApiClient {
 
-//     private final RestTemplate restTemplate;
-//     private final String forecastApiUrl = "https://your-azure-function-url/api/forecast";  // ←実際のURLに置換
+// private final RestTemplate restTemplate;
+// private final String forecastApiUrl =
+// "https://your-azure-function-url/api/forecast"; // ←実際のURLに置換
 
-//     public ForecastApiClient() {
-//         this.restTemplate = new RestTemplate();
-//     }
+// public ForecastApiClient() {
+// this.restTemplate = new RestTemplate();
+// }
 
-//     public ForecastResponseDto callForecastApi() {
-//         ResponseEntity<ForecastResponseDto> response = restTemplate.getForEntity(forecastApiUrl, ForecastResponseDto.class);
-//         return response.getBody();
-//     }
+// public ForecastResponseDto callForecastApi() {
+// ResponseEntity<ForecastResponseDto> response =
+// restTemplate.getForEntity(forecastApiUrl, ForecastResponseDto.class);
+// return response.getBody();
+// }
 // }
