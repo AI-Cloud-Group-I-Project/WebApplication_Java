@@ -13,16 +13,14 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    // 多対一,外部キー
-    // 同一パッケージ内のRoleはimport不要
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
     @Column(nullable = false)
-    private String status;
+    private String status; // 数値型（DB定義通り int で管理）
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     public User() {
@@ -36,15 +34,31 @@ public class User {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Role getRole() {
         return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getStatus() {
         return status;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
