@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>販売実績入力</title>
-  <link rel="stylesheet" th:href="@{/css/record.css}">
+   <link rel="stylesheet" th:href="@{/css/record.css}">
 </head>
 <body>
 
@@ -73,12 +73,18 @@
             <th>JANコード</th>
           </tr>
         </thead>
+        
         <tbody>
-          <tr><td>ホワイトビール</td><td><input type="number" value="10"></td><td>1200</td><td>4901234567894</td></tr>
-          <tr><td>ラガー</td><td><input type="number" value="10"></td><td>800</td><td>4512345678907</td></tr>
-          <tr><td>ペールエール</td><td><input type="number" value="5"></td><td>1000</td><td>4987654321097</td></tr>
-          <tr><td>フルーツビール</td><td><input type="number" value="10"></td><td>1000</td><td>4545678901234</td></tr>
+          <tr th:each="beer : ${beer_info_list}">
+            <td th:text="${beer.beer_name}">商品名</td>
+            <td>
+              <input type="number" name="quantity" value="1" />
+            </td>
+            <td th:text="${beer.price}">価格</td>
+            <td th:text="${beer.jan_code}">JANコード</td>
+          </tr>
         </tbody>
+
       </table>
       <div class="button-row">
         <button class="btn add">Add</button>
