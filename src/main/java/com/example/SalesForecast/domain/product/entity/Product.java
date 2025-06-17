@@ -16,6 +16,9 @@ public class Product {
     @Column(nullable = false)
     private Double price;
 
+    @Column(name = "jan_code", nullable = false)
+    private String janCode;
+
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
     private ProductStatus status;
@@ -33,6 +36,10 @@ public class Product {
 
     public Double getPrice() {
         return price;
+    }
+
+    public String getJanCode() {
+        return janCode;
     }
 
     public ProductStatus getStatus() {
