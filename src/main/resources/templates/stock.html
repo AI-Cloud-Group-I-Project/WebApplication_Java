@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>商品入荷と在庫ページ</title>
   <link rel="stylesheet" th:href="@{/css/stock.css}">
+ 
 </head>
 <body>
   <!-- 一覧表 -->
@@ -52,6 +53,9 @@
           <button class="btn add" type="button">Add</button>
           <button class="btn submit" type="submit">Submit</button>
           <button class="btn export" type="button">Edit</button>
+          
+
+    
         </div>
       </form>
     </div>
@@ -89,7 +93,15 @@
           </tr>
         </tbody>
       </table>
+            <section class="pagination">
+            <button class="page-btn arrow" disabled>&laquo;</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn arrow">&raquo;</button>
+          </section>
     </div>
+
   </div>
 </body>
 </html>
