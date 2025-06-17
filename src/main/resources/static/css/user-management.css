@@ -1,0 +1,98 @@
+/* 共通デザイン（サイドバーやヘッダーは既存のCSSと共通） */
+@import url('record.css');
+
+/* ユーザー管理セクション */
+.user-section {
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  margin-top: 15px;
+}
+.user-table th {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 12px;
+  border: none;
+  text-align: center;
+  font-size: 14px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+.user-table td {
+  background-color: white;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  font-size: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.user-table input,
+.user-table select {
+  padding: 6px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  width: 90%;
+}
+
+/* ボタンスタイル */
+.btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0 3px;
+  transition: all 0.2s ease;
+  color: white;
+}
+
+.btn.edit {
+  background-color: #f1c40f; /* 黄色 */
+}
+.btn.submit {
+  background-color: #3498db; /* 青 */
+}
+.btn.submit.active {
+  background-color: #27ae60; /* 緑：編集したら */
+}
+.btn.reset {
+  background-color: #911204; /* 赤 */
+}
+.btn.reset.used {
+  background-color: gray; /* 使用後 */
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Addボタン */
+.btn.add {
+  background: linear-gradient(to right, #7F00FF, #E100FF);
+  color: white;
+  margin-top: 20px;
+}
+
+/* ボタンホバー共通 */
+.btn:hover:not(.reset.used) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+  .user-table td {
+    font-size: 12px;
+  }
+  .btn {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+}
