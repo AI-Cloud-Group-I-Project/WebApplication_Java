@@ -1,5 +1,5 @@
 /* 共通デザイン（サイドバーやヘッダーは既存のCSSと共通） */
-@import url('record.css');
+@import url('admin-record.css');
 
 /* ユーザー管理セクション */
 .user-section {
