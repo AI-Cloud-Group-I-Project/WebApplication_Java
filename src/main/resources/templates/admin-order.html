@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>需要予測ページ</title>
+  <link rel="stylesheet" th:href="@{/css/admin-order.css}">
+</head>
+<body>
+  <!-- 一覧表 -->
+  <div class="sidebar">
+    <div class="menu-title">メニュー一覧</div>
+    <ul class="menu">
+      <li><a href="#">実績と天気の確認</a></li>
+      <li><a href="#">ユーザー管理</a></li>
+      <li><a href="#">販売実績入力</a></li>
+      <li class="active"><a href="#">需要予測</a></li>
+      <li><a href="#">商品管理</a></li>
+      <li><a href="#">入荷と在庫管理</a></li>
+    </ul>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <!-- TOP -->
+    <div class="topbar">
+      <div class="brand">H&C BAR</div>
+      <div class="topbar-right">
+        <span class="username">高橋 由美子</span>
+        <button class="logout-btn">Log out</button>
+      </div>
+    </div>
+
+    <!--発注日選択 -->
+        <div class="section-container">
+        <h2>発注日選択</h2>
+
+        <label for="order-date">発注日を選択：</label>
+            <select id="order-date" class="date-select">
+                <option value="2025-06-16">6月16日（月曜日）</option>
+                <option value="2025-06-19">6月19日（木曜日）</option>
+                <option value="2025-06-23">6月23日（月曜日）</option>
+                <option value="2025-06-26">6月26日（木曜日）</option>
+            </select>
+        </div>
+
+    
+
+    <!-- 商品一覧表 -->
+    <div class="section-container">
+      <h2>商品一覧</h2>
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>銘柄</th>
+            <th>予測販売数</th>
+            <th>現在在庫（2025.5.31）</th>
+            <th>対象発注数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ホワイトビール</td>
+            <td>35</td>
+            <td>5</td>
+            <td>30</td>
+          </tr>
+          <tr>
+            <td>ラガー</td>
+            <td>45</td>
+            <td>10</td>
+            <td>35</td>
+          </tr>
+          <tr>
+            <td>ペールエール</td>
+            <td>29</td>
+            <td>4</td>
+            <td>25</td>
+          </tr>
+          <tr>
+            <td>フルーツビール</td>
+            <td>48</td>
+            <td>5</td>
+            <td>43</td>
+          </tr>
+          <tr>
+            <td>黒ビール</td>
+            <td>38</td>
+            <td>5</td>
+            <td>33</td>
+          </tr>
+        </tbody>
+      </table>
+          <section class="pagination">
+            <button class="page-btn arrow" disabled>&laquo;</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn arrow">&raquo;</button>
+          </section>
+    </div>
+  </div>
+</body>
+</html>
