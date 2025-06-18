@@ -4,7 +4,6 @@ DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS product_statuses;
 DROP TABLE IF EXISTS weathers;
 
-
 -- product_statusesテーブル作成
 CREATE TABLE product_statuses (
     id SERIAL PRIMARY KEY,
@@ -24,7 +23,7 @@ CREATE TABLE products (
     CONSTRAINT fk_status FOREIGN KEY (status_id) REFERENCES product_statuses(id)
 );
 
--- weathersテーブル作成
+-- weathersテーブル作成（← date は DATE のまま）
 CREATE TABLE weathers (
     id SERIAL PRIMARY KEY,
     date DATE NOT NULL,
@@ -33,7 +32,7 @@ CREATE TABLE weathers (
     weather_condition VARCHAR(50) NOT NULL
 );
 
--- salesテーブル作成
+-- salesテーブル作成（DATE に戻した版）
 CREATE TABLE sales (
     id SERIAL PRIMARY KEY,
     product_id INT NOT NULL,
@@ -41,22 +40,20 @@ CREATE TABLE sales (
     weathers_id INT NOT NULL,
     quantity INT NOT NULL CHECK (quantity >= 0),
     sales_date DATE NOT NULL,
-    created_date DATE NOT NULL,
-    edited_date DATE NOT NULL,
+    created_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    edited_date DATE NOT NULL DEFAULT CURRENT_DATE,
     CONSTRAINT fk_sales_product FOREIGN KEY (product_id) REFERENCES products(id),
     CONSTRAINT fk_sales_user FOREIGN KEY (user_id) REFERENCES users(id),
     CONSTRAINT fk_sales_weathers FOREIGN KEY (weathers_id) REFERENCES weathers(id)
 );
 
--- inventoriesテーブル作成
+-- inventoriesテーブル作成（TIMESTAMP＋デフォルト値）
 CREATE TABLE inventories (
     product_id INT PRIMARY KEY,
     stock_quantity INT NOT NULL CHECK (stock_quantity >= 0),
-    updated_date DATE NOT NULL,
+    updated_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_inventory_product FOREIGN KEY (product_id) REFERENCES products(id)
 );
-
-
 
 -- products 初期データ投入
 INSERT INTO products (name, price, jan_code, status_id)
@@ -71,11 +68,9 @@ VALUES
 -- inventories 初期データ投入
 INSERT INTO inventories (product_id, stock_quantity, updated_date)
 VALUES
-  (1, 25, '2025-06-01'),
-  (2, 30, '2025-06-01'),
-  (3, 18, '2025-06-01'),
-  (4, 22, '2025-06-01'),
-  (5, 15, '2025-06-01'),
-  (6, 28, '2025-06-01');
-
-
+  (1, 25, '2025-06-02 00:00:00'),
+  (2, 30, '2025-06-03 00:00:00'),
+  (3, 18, '2025-06-04 00:00:00'),
+  (4, 22, '2025-06-05 00:00:00'),
+  (5, 15, '2025-06-06 00:00:00'),
+  (6, 28, '2025-06-01 00:00:00');

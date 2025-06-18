@@ -6,7 +6,7 @@
   background-color: var(--white);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   margin-bottom: 30px;
 }
 
@@ -16,6 +16,7 @@
   border-spacing: 0 8px;
   margin-top: 15px;
 }
+
 .user-table th {
   background-color: var(--primary-color);
   color: white;
@@ -26,20 +27,30 @@
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
 }
+
 .user-table td {
   background-color: white;
   padding: 10px;
   border: 1px solid var(--border-color);
   text-align: center;
   font-size: 14px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
+
 .user-table input,
 .user-table select {
   padding: 6px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
   width: 90%;
+  background-color: #f9f9f9;
+}
+
+.user-table input:disabled,
+.user-table select:disabled {
+  background-color: #f0f0f0;
+  color: #999;
+  cursor: not-allowed;
 }
 
 /* ボタンスタイル */
@@ -55,33 +66,54 @@
   color: white;
 }
 
-.btn.edit {
-  background-color: #f1c40f; /* 黄色 */
+/* --- Editボタン --- */
+.btn.user-edit {
+  background-color: #27ae60;
+  /* 緑 */
 }
-.btn.submit {
-  background-color: #3498db; /* 青 */
+
+.btn.user-edit.active {
+  background-color: #f1c40f;
+  /* 黄色 */
 }
-.btn.submit.active {
-  background-color: #27ae60; /* 緑：編集したら */
+
+/* --- user-submitボタン --- */
+.btn.user-submit {
+  background-color: #3498db;
+  color: white;
 }
-.btn.reset {
-  background-color: #911204; /* 赤 */
+
+.btn.user-submit:disabled {
+  background-color: #ccc !important;
+  color: white !important;
+  cursor: not-allowed;
+  opacity: 1 !important;
+  filter: none !important;
+  box-shadow: none !important;
 }
-.btn.reset.used {
-  background-color: gray; /* 使用後 */
+
+
+/* --- password-restボタン --- */
+.btn.password-reset {
+  background-color: #911204;
+  /* 赤 */
+}
+
+.btn.password-reset.used {
+  background-color: gray;
   cursor: default;
   pointer-events: none;
 }
 
-/* Addボタン */
-.btn.add {
+/* --- Addボタン --- */
+.btn.user-add {
   background: linear-gradient(to right, #7F00FF, #E100FF);
   color: white;
   margin-top: 20px;
 }
 
-/* ボタンホバー共通 */
-.btn:hover:not(.reset.used) {
+/* --- ホバー共通 --- */
+.btn:hover:not(:disabled):not(.password-reset.used) {
   opacity: 0.9;
   transform: translateY(-1px);
 }
@@ -91,6 +123,7 @@
   .user-table td {
     font-size: 12px;
   }
+
   .btn {
     font-size: 12px;
     padding: 5px 10px;
