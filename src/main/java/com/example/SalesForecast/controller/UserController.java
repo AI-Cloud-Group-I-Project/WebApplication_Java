@@ -31,7 +31,7 @@ public class UserController {
 
         model.addAttribute("current_username", session.getAttribute("username"));
         model.addAttribute("current_email", session.getAttribute("email"));
-        return "user-management";
+        return "admin-user-management";
     }
 
     // 更新 (Submitボタンで呼ぶ想定)
