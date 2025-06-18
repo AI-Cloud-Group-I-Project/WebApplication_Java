@@ -1,16 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <title>商品管理ページ</title>
   <link rel="stylesheet" th:href="@{/css/admin-product-management.css}">
-
 </head>
+
 <body>
 
   <aside class="sidebar">
-   <div class="menu-title">メニュー一覧</div>
+    <div class="menu-title">メニュー一覧</div>
     <ul class="menu">
       <li><a href="#">実績と天気の確認</a></li>
       <li><a href="#">ユーザー管理</a></li>
@@ -32,6 +32,7 @@
 
     <section class="product-section">
       <h2>商品管理</h2>
+
       <table class="product-table">
         <thead>
           <tr>
@@ -41,22 +42,41 @@
             <th>操作</th>
           </tr>
         </thead>
-       <tbody>
-        <tr>
-         <td>ホワイトビール</td>
-         <td><input type="number" value="1200"></td>
-         <td>4901234567894</td>
-         <td>
-         <button class="btn edit">Edit</button>
-         <button class="btn submit">Submit</button>
-         <button class="btn delete">Delete</button>
-         </td>
-       </tr>
-      </tbody>
+
+        <tbody id="addRow" style="display: none;">
+          <tr>
+            <form th:action="@{/products/add}" method="post">
+              <td><input type="text" name="name" placeholder="銘柄" required /></td>
+              <td><input type="number" name="price" placeholder="値段" required /></td>
+              <td><input type="text" name="janCode" placeholder="JANコード" required /></td>
+              <td>
+                <button class="btn submit" type="submit">Submit</button>
+              </td>
+            </form>
+          </tr>
+        </tbody>
+
+        <tbody>
+          <tr th:each="product : ${productList}">
+            <form th:action="@{/products/update}" method="post">
+              <input type="hidden" name="id" th:value="${product.id}" />
+              <input type="hidden" name="status.id" value="1" />
+              <td><input type="text" name="name" th:value="${product.name}" readonly /></td>
+              <td><input type="number" name="price" th:value="${product.price}" readonly /></td>
+              <td><input type="text" name="janCode" th:value="${product.janCode}" readonly /></td>
+              <td>
+                <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
+                <button class="btn submit" type="submit">Submit</button>
+                <button class="btn delete" type="button"
+                  th:onclick="'deleteProduct(' + ${product.id} + ')'">Delete</button>
+              </td>
+            </form>
+          </tr>
+        </tbody>
       </table>
 
       <div class="button-row">
-        <button class="btn add">Add</button>
+        <button class="btn add" type="button" onclick="toggleAddRow()">Add</button>
       </div>
 
       <section class="pagination">
@@ -69,5 +89,38 @@
     </section>
   </main>
 
+  <script>
+    function enableEdit(button) {
+      const row = button.closest("tr");
+      const inputs = row.querySelectorAll("input");
+      inputs.forEach(input => {
+        if (input.type !== "hidden") {
+          input.removeAttribute("readonly");
+        }
+      });
+    }
+
+    function toggleAddRow() {
+      const addRow = document.getElementById("addRow");
+      addRow.style.display = addRow.style.display === "none" ? "table-row-group" : "none";
+    }
+
+    function deleteProduct(productId) {
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/products/delete";
+
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "id";
+      input.value = productId;
+
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+    }
+  </script>
+
 </body>
+
 </html>
