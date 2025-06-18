@@ -6,7 +6,6 @@
 
 // import jakarta.servlet.http.HttpSession;
 
-
 package com.example.SalesForecast.controller;
 
 import com.example.SalesForecast.domain.product.entity.Product;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 import java.util.List;
 
 @Controller
@@ -33,7 +31,7 @@ public class ProductController {
     public String showProductManagementPage(Model model) {
         List<Product> productList = productService.getAllProducts();
         model.addAttribute("productList", productList);
-        return "product-management";
+        return "admin-product-management";
     }
 
     @PostMapping("/products/update")
@@ -42,15 +40,14 @@ public class ProductController {
             productService.updateProduct(updatedProduct);
         } catch (Exception e) {
             e.printStackTrace(); // ← コンソールにエラーを出力！
-            return "error";      // ← エラー用のテンプレートが無い場合はWhitelabelが出ます
+            return "error"; // ← エラー用のテンプレートが無い場合はWhitelabelが出ます
         }
         return "redirect:/products";
     }
 
-    
     @PostMapping("/products/add")
     public String addProduct(@ModelAttribute Product product) {
-    // ステータスがnullなら "available" を仮設定
+        // ステータスがnullなら "available" を仮設定
         if (product.getStatus() == null) {
             ProductStatus defaultStatus = new ProductStatus();
             defaultStatus.setId(1); // 'available' の ID
@@ -61,11 +58,9 @@ public class ProductController {
         return "redirect:/products";
     }
 
-
     @PostMapping("/products/delete")
     public String deleteProduct(@RequestParam("id") Integer id) {
         productService.deleteProductById(id);
         return "redirect:/products";
     }
 }
-
