@@ -1,5 +1,5 @@
 /* 共通スタイル読み込み */
-@import url('record.css');
+@import url('admin-record.css');
 
 .filter-section {
   background-color: var(--white);
