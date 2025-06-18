@@ -45,4 +45,24 @@ public class Product {
     public ProductStatus getStatus() {
         return status;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public void setJanCode(String janCode) {
+        this.janCode = janCode;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
+    }
 }
