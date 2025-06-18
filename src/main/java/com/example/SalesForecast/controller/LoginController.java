@@ -30,7 +30,7 @@ public class LoginController {
         if (user != null) {
             session.setAttribute("username", user.getName());
             session.setAttribute("email", user.getEmail());
-            return "redirect:/welcome";
+            return "redirect:/sales-weather";
         } else {
             model.addAttribute("error", "ログイン失敗");
             return "login";

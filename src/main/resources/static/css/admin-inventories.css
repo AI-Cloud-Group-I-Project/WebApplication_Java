@@ -1,0 +1,46 @@
+/* 共通デザイン（サイドバーやヘッダーは既存のCSSと共通） */
+@import url('common-layout.css');
+
+/* -------- カスタムセクションレイアウト -------- */
+.section-container {
+  background-color: var(--white);
+  margin: 30px 40px;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.section-container h2 {
+  font-size: 20px;
+  border-left: 6px solid var(--primary-color);
+  padding-left: 10px;
+  color: var(--text-color);
+  margin-bottom: 20px;
+}
+
+/* -------- 入荷フォーム（カスタムグリッド） -------- */
+.stock-form .form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: space-between;
+}
+
+.stock-form .form-grid>div {
+  flex: 1;
+  min-width: 250px;
+}
+
+.stock-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.stock-form input {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  width: 100%;
+  font-size: 15px;
+}

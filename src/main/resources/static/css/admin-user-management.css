@@ -1,5 +1,5 @@
 /* 共通デザイン（サイドバーやヘッダーは既存のCSSと共通） */
-@import url('record.css');
+@import url('common-layout.css');
 
 /* ユーザー管理セクション */
 .user-section {
@@ -10,33 +10,7 @@
   margin-bottom: 30px;
 }
 
-.user-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 8px;
-  margin-top: 15px;
-}
-
-.user-table th {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 12px;
-  border: none;
-  text-align: center;
-  font-size: 14px;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-}
-
-.user-table td {
-  background-color: white;
-  padding: 10px;
-  border: 1px solid var(--border-color);
-  text-align: center;
-  font-size: 14px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
+/* 入力欄・セレクトボックス */
 .user-table input,
 .user-table select {
   padding: 6px;
@@ -53,72 +27,26 @@
   cursor: not-allowed;
 }
 
-/* ボタンスタイル */
-.btn {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  margin: 0 3px;
-  transition: all 0.2s ease;
-  color: white;
-}
 
-/* --- Editボタン --- */
-.btn.user-edit {
-  background-color: #27ae60;
-  /* 緑 */
-}
-
-.btn.user-edit.active {
-  background-color: #f1c40f;
-  /* 黄色 */
-}
-
-/* --- user-submitボタン --- */
-.btn.user-submit {
-  background-color: #3498db;
-  color: white;
-}
-
-.btn.user-submit:disabled {
-  background-color: #ccc !important;
-  color: white !important;
-  cursor: not-allowed;
-  opacity: 1 !important;
-  filter: none !important;
-  box-shadow: none !important;
-}
-
-
-/* --- password-restボタン --- */
-.btn.password-reset {
+/* --- password-resetボタン --- */
+.btn.reset {
   background-color: #911204;
-  /* 赤 */
 }
 
-.btn.password-reset.used {
+.btn.reset.used {
   background-color: gray;
   cursor: default;
   pointer-events: none;
 }
 
-/* --- Addボタン --- */
-.btn.user-add {
-  background: linear-gradient(to right, #7F00FF, #E100FF);
-  color: white;
-  margin-top: 20px;
-}
 
-/* --- ホバー共通 --- */
+/* --- ホバー共通（無効なボタンを除外） --- */
 .btn:hover:not(:disabled):not(.password-reset.used) {
   opacity: 0.9;
   transform: translateY(-1px);
 }
 
-/* レスポンシブ */
+/* レスポンシブ調整 */
 @media (max-width: 768px) {
   .user-table td {
     font-size: 12px;

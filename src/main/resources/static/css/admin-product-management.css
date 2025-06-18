@@ -1,129 +1,12 @@
-/* -------- テーマカラー定義 -------- */
-:root {
-  --primary-color: #1abc9c;
-  --primary-dark: #16a085;
-  --text-color: #333;
-  --bg-color: #f4f6f8;
-  --border-color: #ddd;
-  --white: #ffffff;
-}
-
-/* -------- 共通設定 -------- */
-* {
-  box-sizing: border-box;
-}
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: var(--bg-color);
-  display: flex;
-  color: var(--text-color);
-}
-
-/* -------- 左側メニュー -------- */
-.sidebar {
-  width: 220px;
-  background-color: var(--bg-color);
-  height: 100vh;
-  padding-top: 20px;
-  border-right: 1px solid var(--border-color);
-}
-.menu {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-}
-.menu-title {
-  font-weight: bold;
-  font-size: 18px;
-  margin: 20px 20px 10px;
-  text-align: left;
-}
-.menu li {
-  padding: 23px 20px;
-  transition: background 0.3s;
-  font-size: 15px;
-}
-.menu li:hover {
-  background-color: #e0f7f5;
-}
-.menu li.active {
-  background-color: var(--primary-color);
-  color: white;
-  border-left: 4px solid var(--primary-dark);
-  font-weight: bold;
-}
-.menu li a {
-  color: inherit;
-  text-decoration: none;
-  display: block;
-}
-
-/* -------- メインコンテンツ -------- */
-.main-content {
-  flex: 1;
-  padding: 20px 40px;
-  background-color: var(--bg-color);
-}
-
-/* -------- ヘッダーバー -------- */
-.topbar {
-  width: 100%;
-  background-color: white;
-  padding: 12px 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  z-index: 10;
-}
-.brand {
-  font-size: 22px;
-  font-weight: bold;
-  color: #1abc9c;
-  text-align: center;
-  flex-grow: 1;
-}
-.topbar-right {
-  position: absolute;
-  right: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.username {
-  font-weight: 500;
-  color: #555;
-}
-.logout-btn {
-  background-color: #ddd;
-  color: #333;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.logout-btn:hover {
-  background-color: #ccc;
-}
-
-/* -------- セクションタイトル -------- */
-.main-content h2 {
-  font-size: 20px;
-  border-left: 6px solid var(--primary-color);
-  padding-left: 10px;
-  color: var(--text-color);
-  margin-bottom: 15px;
-}
+/* 共通デザイン（サイドバーやヘッダーは既存のCSSと共通） */
+@import url('common-layout.css');
 
 /* -------- カレンダー -------- */
 .calendar-section {
   background-color: var(--white);
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   margin-bottom: 40px;
 }
 
@@ -132,117 +15,14 @@ body {
   background-color: var(--white);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   margin-bottom: 30px;
 }
 
-/* -------- 商品情報テーブル -------- */
-.product-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 8px;
-  margin-top: 15px;
-}
-.product-table th {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 12px;
-  border: none;
-  text-align: center;
-  font-size: 14px;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-}
-.product-table td {
-  background-color: white;
-  padding: 10px;
-  border: 1px solid var(--border-color);
-  text-align: center;
-  font-size: 14px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-.product-table tr:hover td {
-  background-color: #f9f9f9;
-}
+/* -------- 商品情報テーブルの入力欄 -------- */
 .product-table input {
   width: 60px;
   padding: 6px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
-}
-
-/* -------- ボタンエリア -------- */
-.button-row {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  color: white;
-}
-
-.btn.add {
-  background: linear-gradient(to right, #7F00FF, #E100FF);
-}
-.btn.submit {
-  background: linear-gradient(to right, #FF416C, #FF4B2B);
-}
-.btn.export {
-  background: linear-gradient(to right, #FDC830, #F37335);
-  color: black;
-}
-.btn:hover {
-  transform: translateY(-2px);
-  opacity: 0.9;
-}
-
-/* -------- ページネーション -------- */
-.pagination {
-  margin-top: 30px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  padding-right: 10px;
-}
-.page-btn {
-  padding: 8px 14px;
-  background-color: #fff;
-  color: var(--text-color);
-  border: 1px solid var(--primary-color);
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
-.page-btn:hover {
-  background-color: var(--primary-color);
-  color: white;
-}
-.page-btn.active {
-  background-color: var(--primary-color);
-  color: white;
-  pointer-events: none;
-}
-.page-btn.arrow {
-  color: black;
-}
-
-/* -------- レスポンシブ対応 -------- */
-@media (max-width: 768px) {
-  .sidebar {
-    display: none;
-  }
-  .main-content {
-    padding: 20px;
-  }
 }

@@ -1,30 +1,39 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <title>実績と天気の確認</title>
   <link rel="stylesheet" th:href="@{/css/admin-weather-sales.css}">
+  <!-- <link rel="stylesheet" href="../static/css/admin-weather-sales.css"> -->
+  <script th:src="@{/js/admin-weather-sales.js}" defer></script>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
   <aside class="sidebar">
     <ul class="menu">
       <li class="menu-title">メニュー一覧</li>
-      <li class="active"><a href="#">実績と天気の確認</a></li>
-      <li><a href="#">ユーザー管理</a></li>
-      <li><a href="#">販売実績入力</a></li>
-      <li><a href="#">需要予測</a></li>
-      <li><a href="#">商品管理</a></li>
-      <li><a href="#">入荷と在庫管理</a></li>
+      <li class="active"><a href="/sales-weather">実績と天気の確認</a></li>
+      <li><a href="/users">ユーザー管理</a></li>
+      <li><a href="/record">販売実績入力</a></li>
+      <li><a href="/forecast">需要予測</a></li>
+      <li><a href="/products">商品管理</a></li>
+      <li><a href="/inventories">入荷と在庫管理</a></li>
     </ul>
   </aside>
 
+  <!-- メインコンテンツ -->
   <main class="main-content">
+    <!-- トップバー -->
     <div class="topbar">
       <div class="brand">H&amp;C BAR</div>
       <div class="topbar-right">
-        <span class="username">admin</span>
-        <button class="logout-btn">Logout</button>
+        <span class="current-username" th:text="${current_username}"></span>
+        <form th:action="@{/logout}" method="post">
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
       </div>
     </div>
 
@@ -41,49 +50,80 @@
         <div class="filter-item">
           <label>天気</label>
           <select name="weather" id="weather-select">
-            <option>すべて</option><option>晴れ</option><option>曇り</option><option>雨</option><option>雪</option>
+            <option>すべて</option>
+            <option>晴れ</option>
+            <option>曇り</option>
+            <option>雨</option>
+            <option>雪</option>
           </select>
         </div>
         <div class="filter-item">
           <label>銘柄</label>
           <select name="brand" id="brand-select">
-            <option>すべて</option><option>ホワイトビール</option><option>ラガー</option>
-            <option>ペールエール</option><option>フルーツビール</option>
-            <option>黒ビール</option><option>IPA</option>
+            <option>すべて</option>
+            <option>ホワイトビール</option>
+            <option>ラガー</option>
+            <option>ペールエール</option>
+            <option>フルーツビール</option>
+            <option>黒ビール</option>
+            <option>IPA</option>
           </select>
         </div>
         <div class="filter-item">
           <label>本数（本）</label>
           <select name="volume" id="volume-select">
-            <option>すべて</option><option>1～10</option><option>11～20</option>
-            <option>21～30</option><option>31～40</option>
-            <option>41～50</option><option>50以上</option>
+            <option>すべて</option>
+            <option>1～10</option>
+            <option>11～20</option>
+            <option>21～30</option>
+            <option>31～40</option>
+            <option>41～50</option>
+            <option>50以上</option>
           </select>
         </div>
         <div class="filter-item">
           <label>売上（円）</label>
           <select name="sales" id="sales-select">
-            <option>すべて</option><option>1～2000</option><option>2001～4000</option>
-            <option>4001～6000</option><option>6001～8000</option>
-            <option>8001～10000</option><option>10001～12000</option>
-            <option>12001～14000</option><option>14001～16000</option>
-            <option>16001～18000</option><option>18001～20000</option><option>20000以上</option>
+            <option>すべて</option>
+            <option>1～2000</option>
+            <option>2001～4000</option>
+            <option>4001～6000</option>
+            <option>6001～8000</option>
+            <option>8001～10000</option>
+            <option>10001～12000</option>
+            <option>12001～14000</option>
+            <option>14001～16000</option>
+            <option>16001～18000</option>
+            <option>18001～20000</option>
+            <option>20000以上</option>
           </select>
         </div>
         <div class="filter-item">
           <label>降水量（mm）</label>
           <select name="rain" id="rain-select">
-            <option>すべて</option><option>0～50</option><option>51～100</option>
-            <option>101～150</option><option>151～200</option>
-            <option>201～250</option><option>250以上</option>
+            <option>すべて</option>
+            <option>0～50</option>
+            <option>51～100</option>
+            <option>101～150</option>
+            <option>151～200</option>
+            <option>201～250</option>
+            <option>250以上</option>
           </select>
         </div>
         <div class="filter-item">
           <label>平均気温（℃）</label>
           <select name="temp" id="temp-select">
-            <option>すべて</option><option>-10～-6</option><option>-5～0</option><option>1～5</option>
-            <option>6～10</option><option>11～15</option><option>16～20</option>
-            <option>21～25</option><option>26～30</option><option>31～35</option><option>35以上</option>
+            <option>すべて</option>
+            <option>-10～-6</option>
+            <option>-5～0</option>
+            <option>1～5</option>
+            <option>6～10</option>
+            <option>11～15</option>
+            <option>16～20</option>
+            <option>21～25</option>
+            <option>26～30</option>
+            <option>31～35</option>
+            <option>35以上</option>
           </select>
         </div>
         <button class="btn submit" onclick="fetchFilteredData()">検索</button>
@@ -94,7 +134,11 @@
       <table class="data-table" id="sales-table">
         <thead>
           <tr>
-            <th>日付</th><th>天気</th><th>銘柄</th><th>本数</th><th>売上金額</th>
+            <th>日付</th>
+            <th>天気</th>
+            <th>銘柄</th>
+            <th>本数</th>
+            <th>売上金額</th>
           </tr>
         </thead>
         <tbody>
@@ -108,88 +152,6 @@
       <canvas id="salesChart" class="chart-placeholder"></canvas>
     </section>
   </main>
-
-  <script>
-    // 年と月の初期化
-    const yearSelect = document.getElementById('year-select');
-    const monthSelect = document.getElementById('month-select');
-    const currentYear = new Date().getFullYear();
-    for (let y = currentYear - 2; y <= currentYear + 3; y++) {
-      yearSelect.innerHTML += `<option value="${y}">${y}年</option>`;
-    }
-    for (let m = 1; m <= 12; m++) {
-      monthSelect.innerHTML += `<option value="${m}">${m}月</option>`;
-    }
-
-    // Chart.jsのグラフ生成関数
-    let chart;
-    function updateChart(labels, salesData, tempData, rainData) {
-      const ctx = document.getElementById('salesChart').getContext('2d');
-      if (chart) chart.destroy();
-      chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: '売上（円）',
-              data: salesData,
-              borderColor: 'blue',
-              fill: false
-            },
-            {
-              label: '平均気温（℃）',
-              data: tempData,
-              borderColor: 'orange',
-              fill: false
-            },
-            {
-              label: '降水量（mm）',
-              data: rainData,
-              borderColor: 'green',
-              fill: false
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
-      });
-    }
-
-    // データ取得（API連携を想定）
-    function fetchFilteredData() {
-      fetch('/api/sales')
-        .then(response => response.json())
-        .then(data => {
-          const tableBody = document.querySelector('#sales-table tbody');
-          tableBody.innerHTML = '';
-          const labels = [], sales = [], temp = [], rain = [];
-
-          data.forEach(row => {
-            labels.push(row.date);
-            sales.push(row.sales);
-            temp.push(row.temperature);
-            rain.push(row.rainfall);
-
-            tableBody.innerHTML += `
-              <tr>
-                <td>${row.date}</td>
-                <td>${row.weather}</td>
-                <td>${row.brand}</td>
-                <td>${row.volume}</td>
-                <td>${row.sales}</td>
-              </tr>`;
-          });
-
-          updateChart(labels, sales, temp, rain);
-        });
-    }
-  </script>
 </body>
+
 </html>

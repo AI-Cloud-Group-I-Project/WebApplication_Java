@@ -1,8 +1,38 @@
+DROP TABLE IF EXISTS login_credentials;
 DROP TABLE IF EXISTS sales;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS inventories;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS product_statuses;
 DROP TABLE IF EXISTS weathers;
+
+
+-- rolesテーブル作成
+CREATE TABLE roles (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- usersテーブル作成
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    role_id INT NOT NULL REFERENCES roles(id),
+    status VARCHAR(20) NOT NULL CHECK (status IN ('active', 'retired')),
+    email VARCHAR(255) NOT NULL,
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    edited_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- login_credentialsテーブル作成
+CREATE TABLE login_credentials (
+    user_id INT PRIMARY KEY REFERENCES users(id),
+    password_hash VARCHAR(255) NOT NULL,
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    edited_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 
 -- product_statusesテーブル作成
 CREATE TABLE product_statuses (
@@ -54,6 +84,60 @@ CREATE TABLE inventories (
     updated_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_inventory_product FOREIGN KEY (product_id) REFERENCES products(id)
 );
+
+
+
+-- roles 初期データ投入
+INSERT INTO roles (id, name) VALUES (1, 'admin');
+INSERT INTO roles (id, name) VALUES (2, 'user');
+INSERT INTO roles (id, name) VALUES (3, 'viewer');
+
+-- users 初期データ投入
+INSERT INTO users (name, role_id, status, email)
+VALUES ('Test User', 1, 'active', 'testuser@example.com');
+
+-- login_credentials 初期データ投入
+INSERT INTO login_credentials (user_id, password_hash)
+VALUES (
+    (SELECT id FROM users WHERE email = 'testuser@example.com'),
+    '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+);
+
+
+-- users 初期データ投入
+INSERT INTO users (name, role_id, status, email)
+VALUES ('米津玄師', 3, 'retired', 'yonezu@example.com');
+
+-- login_credentials 初期データ投入
+INSERT INTO login_credentials (user_id, password_hash)
+VALUES (
+    (SELECT id FROM users WHERE email = 'yonezu@example.com'),
+    '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
+
+-- users 初期データ投入
+INSERT INTO users (name, role_id, status, email)
+VALUES ('小林らんう', 2, 'active', 'kobayashi@example.com');
+
+-- login_credentials 初期データ投入
+INSERT INTO login_credentials (user_id, password_hash)
+VALUES (
+    (SELECT id FROM users WHERE email = 'kobayashi@example.com'),
+    '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+);
+
+
+-- users 初期データ投入
+INSERT INTO users (name, role_id, status, email)
+VALUES ('田中太郎', 1, 'active', 'tanaka@example.com');
+
+-- login_credentials 初期データ投入
+INSERT INTO login_credentials (user_id, password_hash)
+VALUES (
+    (SELECT id FROM users WHERE email = 'tanaka@example.com'),
+    '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+);
+
+
 
 -- products 初期データ投入
 INSERT INTO products (name, price, jan_code, status_id)

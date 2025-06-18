@@ -1,29 +1,34 @@
 /* 共通スタイル読み込み */
-@import url('record.css');
+@import url('common-layout.css');
 
+/* -------- フィルターUI -------- */
 .filter-section {
   background-color: var(--white);
   padding: 20px;
   margin: 20px 0;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
+
 .filter-row {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
   align-items: flex-end;
 }
+
 .filter-item {
   display: flex;
   flex-direction: column;
   min-width: 120px;
 }
+
 .filter-item label {
   font-size: 13px;
   margin-bottom: 5px;
   color: var(--text-color);
 }
+
 .filter-row select,
 .filter-row button {
   padding: 10px;
@@ -31,6 +36,7 @@
   border-radius: 6px;
   border: 1px solid var(--border-color);
 }
+
 .filter-row .submit {
   background-color: var(--primary-color);
   color: white;
@@ -40,21 +46,25 @@
   height: 40px;
   align-self: flex-end;
 }
+
 .filter-row .submit:hover {
   background-color: var(--primary-dark);
 }
 
+/* -------- テーブル表示 -------- */
 .table-section {
   background-color: var(--white);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   margin-bottom: 30px;
 }
+
 .data-table {
   width: 100%;
   border-collapse: collapse;
 }
+
 .data-table th {
   background-color: var(--primary-color);
   color: white;
@@ -62,6 +72,7 @@
   font-size: 14px;
   text-align: center;
 }
+
 .data-table td {
   padding: 10px;
   border: 1px solid var(--border-color);
@@ -69,16 +80,19 @@
   background-color: white;
   font-size: 14px;
 }
+
 .data-table tr:hover td {
   background-color: #f9f9f9;
 }
 
+/* -------- グラフエリア -------- */
 .chart-section {
   background-color: var(--white);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
+
 .chart-section h3 {
   font-size: 18px;
   margin-bottom: 15px;
@@ -86,6 +100,7 @@
   border-left: 6px solid var(--primary-color);
   padding-left: 10px;
 }
+
 .chart-placeholder {
   width: 100%;
   max-height: 360px;
@@ -96,14 +111,17 @@
   background-color: #fefefe;
 }
 
+/* -------- レスポンシブ -------- */
 @media (max-width: 768px) {
   .filter-row {
     flex-direction: column;
     align-items: stretch;
   }
+
   .filter-item {
     width: 100%;
   }
+
   .filter-row button {
     width: 100%;
   }

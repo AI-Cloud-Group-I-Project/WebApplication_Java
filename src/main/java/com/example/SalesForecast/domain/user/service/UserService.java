@@ -1,48 +1,83 @@
 package com.example.SalesForecast.domain.user.service;
 
+import com.example.SalesForecast.domain.user.entity.LoginCredential;
+import com.example.SalesForecast.domain.user.entity.Role;
 import com.example.SalesForecast.domain.user.entity.User;
+import com.example.SalesForecast.domain.user.repository.LoginCredentialRepository;
+import com.example.SalesForecast.domain.user.repository.RoleRepository;
 import com.example.SalesForecast.domain.user.repository.UserRepository;
+import com.example.SalesForecast.util.PasswordUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final LoginCredentialRepository loginCredentialRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+            RoleRepository roleRepository,
+            LoginCredentialRepository loginCredentialRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.loginCredentialRepository = loginCredentialRepository;
     }
 
-    // 全ユーザ取得
     public List<User> getAllUsers() {
-        return userRepository.findAllByOrderByCreatedDateDesc(); // Asc or Desc
+        return userRepository.findAllByOrderByCreatedDateDesc();
     }
 
-    // IDで取得
     public Optional<User> getUserById(Integer id) {
         return userRepository.findById(id);
     }
 
-    // emailで取得
     public Optional<User> getUserByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email));
     }
 
-    // 新規登録
-    public User createUser(User user) {
-        return userRepository.save(user);
+    @Transactional
+    public void createUserWithCredential(String name, String email, Integer roleId) {
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new IllegalArgumentException("ロールが見つかりません"));
+
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setRole(role);
+        user.setStatus("active");
+
+        User savedUser = userRepository.save(user); // IDが確定
+
+        LoginCredential credential = new LoginCredential();
+        credential.setUser(savedUser);
+        credential.setPasswordHash(PasswordUtil.hash("password1234"));
+        credential.setCreatedDate(LocalDate.now());
+        credential.setEditedDate(LocalDate.now());
+
+        loginCredentialRepository.save(credential);
     }
 
-    // 更新
-    public User updateUser(User user) {
-        return userRepository.save(user);
+    @Transactional
+    public void updateUserInfo(Integer id, String name, String email, Integer roleId) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
+
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new IllegalArgumentException("ロールが見つかりません"));
+
+        user.setName(name);
+        user.setEmail(email);
+        user.setRole(role);
+
+        userRepository.save(user);
     }
 
-    // 削除（今後必要になれば）
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }
-
 }

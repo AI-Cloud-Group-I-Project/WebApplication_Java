@@ -1,31 +1,18 @@
-// // 実績・天気データ確認ページ
-// package com.example.SalesForecast.controller;
+package com.example.SalesForecast.controller;
 
-// import com.example.SalesForecast.domain.sales.entity.Sales;
-// import com.example.SalesForecast.domain.sales.repository.SalesRepository;
+import jakarta.servlet.http.HttpSession;
 
-// import org.springframework.stereotype.Controller;
-// import org.springframework.ui.Model;
-// import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
-// import java.util.List;
+@Controller
+public class SalesWeatherController {
+    @GetMapping("/sales-weather")
+    public String showSalesWeatherPage(Model model, HttpSession session) {
+        model.addAttribute("current_username", session.getAttribute("username"));
+        model.addAttribute("current_email", session.getAttribute("email"));
 
-// // @Controller
-// // public class SalesWeatherController {
-
-// // private final SalesRepository salesRepository;
-
-// // public SalesWeatherController(SalesRepository salesRepository) {
-// // this.salesRepository = salesRepository;
-// // }
-
-// // @GetMapping("/performance/weather")
-// // public String showSalesWeather(Model model) {
-// // List<Sales> salesList = salesRepository.findAll();
-// // // salesの中でヒットしたものを受けとる
-// // // 天気の中でヒットしたものを受け取る
-// // // プロダクト(ビール)でヒットしたものを受け取る
-// // model.addAttribute("salesList", salesList);
-// // return "sales_weather"; // ここは後で作るsales_weather.htmlに対応
-// // }
-// // }
+        return "admin-weather-sales";
+    }
+}
