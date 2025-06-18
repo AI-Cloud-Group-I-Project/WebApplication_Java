@@ -17,7 +17,7 @@ public class UserService {
 
     // 全ユーザ取得
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userRepository.findAllByOrderByCreatedDateDesc(); // Asc or Desc
     }
 
     // IDで取得
@@ -44,4 +44,5 @@ public class UserService {
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }
+
 }

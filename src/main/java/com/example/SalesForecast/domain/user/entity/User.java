@@ -1,6 +1,11 @@
 package com.example.SalesForecast.domain.user.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDate; // ← DATE型に対応
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "users")
@@ -18,13 +23,23 @@ public class User {
     private Role role;
 
     @Column(nullable = false)
-    private String status; // 数値型（DB定義通り int で管理）
+    private String status;
 
     @Column(nullable = false, unique = true)
     private String email;
 
+    @CreationTimestamp
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private LocalDateTime createdDate;
+
+    @UpdateTimestamp
+    @Column(name = "edited_date", nullable = false)
+    private LocalDateTime editedDate;
+
     public User() {
     }
+
+    // --- getter/setter ---
 
     public Integer getId() {
         return id;
@@ -60,5 +75,17 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public LocalDateTime getEditedDate() {
+        return editedDate;
+    }
+
+    public void setEditedDate(LocalDateTime editedDate) {
+        this.editedDate = editedDate;
     }
 }
