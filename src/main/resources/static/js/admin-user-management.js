@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   // --- 既存のEditボタン処理 ---
-  document.querySelectorAll(".btn.user-edit").forEach(function (editBtn) {
+  document.querySelectorAll(".btn.edit").forEach(function (editBtn) {
     editBtn.addEventListener("click", function () {
       const form = editBtn.closest(".user-form");
       const row = form.closest("tr");
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       editBtn.classList.add("active");
 
-      const submitBtn = form.querySelector(".btn.user-submit");
+      const submitBtn = form.querySelector(".btn.submit");
       if (submitBtn) {
         submitBtn.disabled = false;
       }
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // --- Addボタンの処理（上に追加） ---
-  const addBtn = document.querySelector(".btn.user-add");
+  const addBtn = document.querySelector(".btn.add");
   const table = document.querySelector(".user-table");
 
   if (addBtn && table) {
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const newRow = document.createElement("tr");
       newRow.innerHTML = `
             <td colspan="4">
-              <form action="/users/update" method="post" class="user-form">
+              <form action="/users/update" method="post" class="form">
                 <table style="width: 100%;">
                   <tr>
                     <td style="width: 20%;">
@@ -47,9 +47,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     </td>
                     <td style="width: 35%;">
                       <input type="hidden" name="id" value="" />
-                      <button class="btn user-edit active" type="button" disabled>Edit</button>
-                      <button class="btn user-submit" type="submit" name="action" value="submit">Submit</button>
-                      <button class="btn password-reset" type="submit" name="action" value="reset" disabled>Password Reset</button>
+                      <button class="btn edit active" type="button" disabled>Edit</button>
+                      <button class="btn submit" type="submit" name="action" value="submit">Submit</button>
+                      <button class="btn reset" type="submit" name="action" value="reset" disabled>Password Reset</button>
                     </td>
                   </tr>
                 </table>

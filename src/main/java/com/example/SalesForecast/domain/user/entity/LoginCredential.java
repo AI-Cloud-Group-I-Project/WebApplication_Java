@@ -51,4 +51,21 @@ public class LoginCredential {
         return editedDate;
     }
 
+    // セッター
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public void setEditedDate(LocalDate editedDate) {
+        this.editedDate = editedDate;
+    }
+
 }

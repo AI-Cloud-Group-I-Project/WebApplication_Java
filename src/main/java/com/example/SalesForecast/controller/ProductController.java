@@ -11,6 +11,9 @@ package com.example.SalesForecast.controller;
 import com.example.SalesForecast.domain.product.entity.Product;
 import com.example.SalesForecast.domain.product.entity.ProductStatus;
 import com.example.SalesForecast.domain.product.service.ProductService;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,9 +31,12 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/products")
-    public String showProductManagementPage(Model model) {
+    public String showProductManagementPage(Model model, HttpSession session) {
         List<Product> productList = productService.getAllProducts();
         model.addAttribute("productList", productList);
+        model.addAttribute("current_username", session.getAttribute("username"));
+        model.addAttribute("current_email", session.getAttribute("email"));
+
         return "admin-product-management";
     }
 

@@ -1,35 +1,41 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <title>販売実績入力</title>
-   <link rel="stylesheet" th:href="@{/css/admin-record.css}">
+  <link rel="stylesheet" th:href="@{/css/admin-record.css}">
+  <!-- <link rel="stylesheet" href="../static/css/admin-record.css"> -->
+  <script th:src="@{/js/admin-record.js}" defer></script>
+
 </head>
+
 <body>
 
   <!--  一覧表 -->
   <aside class="sidebar">
     <ul class="menu">
       <li class="menu-title">メニュー一覧</li>
-      <li><a href="#">実績と天気の確認</a></li>
-      <li><a href="#">ユーザー管理</a></li>
-      <li class="active"><a href="#">販売実績入力</a></li>
-      <li><a href="#">需要予測</a></li>
-      <li><a href="#">商品管理</a></li>
-      <li><a href="#">入荷と在庫管理</a></li>
+      <li><a href="/sales-weather">実績と天気の確認</a></li>
+      <li><a href="/users">ユーザー管理</a></li>
+      <li class="active"><a href="/record">販売実績入力</a></li>
+      <li><a href="/forecast">需要予測</a></li>
+      <li><a href="/products">商品管理</a></li>
+      <li><a href="/inventories">入荷と在庫管理</a></li>
     </ul>
   </aside>
 
-  <!-- 🔷 ページ内容 -->
+  <!-- メインコンテンツ -->
   <main class="main-content">
-
-    <!-- 🔹 TOP -->
+    <!-- トップバー -->
     <div class="topbar">
-    <div class="brand">H&amp;C BAR</div>
-    <div class="topbar-right">
-        <span class="username">admin</span>
-        <button class="logout-btn">Logout</button>
-    </div>
+      <div class="brand">H&amp;C BAR</div>
+      <div class="topbar-right">
+        <span class="current-username" th:text="${current_username}"></span>
+        <form th:action="@{/logout}" method="post">
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      </div>
     </div>
 
 
@@ -49,15 +55,47 @@
       </div>
 
       <ul class="weekdays">
-        <li>Mo</li><li>Tu</li><li>We</li><li>Th</li><li>Fr</li><li>Sa</li><li>Su</li>
+        <li>Mo</li>
+        <li>Tu</li>
+        <li>We</li>
+        <li>Th</li>
+        <li>Fr</li>
+        <li>Sa</li>
+        <li>Su</li>
       </ul>
 
       <ul class="days">
-        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li>
-        <li>8</li><li>9</li><li class="active">10</li><li>11</li><li>12</li><li>13</li><li>14</li>
-        <li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li>
-        <li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li>
-        <li>29</li><li>30</li><li>31</li>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li class="active">10</li>
+        <li>11</li>
+        <li>12</li>
+        <li>13</li>
+        <li>14</li>
+        <li>15</li>
+        <li>16</li>
+        <li>17</li>
+        <li>18</li>
+        <li>19</li>
+        <li>20</li>
+        <li>21</li>
+        <li>22</li>
+        <li>23</li>
+        <li>24</li>
+        <li>25</li>
+        <li>26</li>
+        <li>27</li>
+        <li>28</li>
+        <li>29</li>
+        <li>30</li>
+        <li>31</li>
       </ul>
     </section>
 
@@ -73,7 +111,7 @@
             <th>JANコード</th>
           </tr>
         </thead>
-        
+
         <tbody>
           <tr th:each="beer : ${beer_info_list}">
             <td th:text="${beer.beer_name}">商品名</td>
@@ -88,25 +126,12 @@
       </table>
       <div class="button-row">
         <button class="btn add">Add</button>
-        <button class="btn submit">Submit</button>
-        <button class="btn export">Export</button>
+        <button class="btn submit" disabled>Submit</button>
+        <button class="btn edit">Edit</button>
       </div>
     </section>
 
   </main>
-
-  <!-- 🔹 JS-->
-  <script>
-    const dayItems = document.querySelectorAll('.days li');
-    dayItems.forEach(item => {
-      item.addEventListener('click', () => {
-        dayItems.forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
-      });
-    });
-  </script>
-
 </body>
-</html>
 
- 
+</html>

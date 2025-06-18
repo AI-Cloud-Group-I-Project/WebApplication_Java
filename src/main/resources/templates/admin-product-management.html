@@ -5,28 +5,35 @@
   <meta charset="UTF-8">
   <title>商品管理ページ</title>
   <link rel="stylesheet" th:href="@{/css/admin-product-management.css}">
+  <!-- <link rel="stylesheet" href="../static/css/admin-product-management.css"> -->
+  <script th:src="@{/js/admin-product-management.js}" defer></script>
+  <!-- <script src="../static/js/admin-product-management.js" defer></script> -->
 </head>
 
 <body>
 
   <aside class="sidebar">
-    <div class="menu-title">メニュー一覧</div>
     <ul class="menu">
-      <li><a href="#">実績と天気の確認</a></li>
-      <li><a href="#">ユーザー管理</a></li>
-      <li><a href="#">販売実績入力</a></li>
-      <li><a href="#">需要予測</a></li>
-      <li class="active"><a href="#">商品管理</a></li>
-      <li><a href="#">入荷と在庫管理</a></li>
+      <li class="menu-title">メニュー一覧</li>
+      <li><a href="/sales-weather">実績と天気の確認</a></li>
+      <li><a href="/users">ユーザー管理</a></li>
+      <li><a href="/record">販売実績入力</a></li>
+      <li><a href="/forecast">需要予測</a></li>
+      <li class="active"><a href="/products">商品管理</a></li>
+      <li><a href="/inventories">入荷と在庫管理</a></li>
     </ul>
   </aside>
 
+  <!-- メインコンテンツ -->
   <main class="main-content">
+    <!-- トップバー -->
     <div class="topbar">
       <div class="brand">H&amp;C BAR</div>
       <div class="topbar-right">
-        <span class="username">admin</span>
-        <button class="logout-btn">Logout</button>
+        <span class="current-username" th:text="${current_username}"></span>
+        <form th:action="@{/logout}" method="post">
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
       </div>
     </div>
 
@@ -61,12 +68,12 @@
             <form th:action="@{/products/update}" method="post">
               <input type="hidden" name="id" th:value="${product.id}" />
               <input type="hidden" name="status.id" value="1" />
-              <td><input type="text" name="name" th:value="${product.name}" readonly /></td>
-              <td><input type="number" name="price" th:value="${product.price}" readonly /></td>
-              <td><input type="text" name="janCode" th:value="${product.janCode}" readonly /></td>
+              <td><input type="text" name="name" th:value="${product.name}" disabled /></td>
+              <td><input type="number" name="price" th:value="${product.price}" disabled /></td>
+              <td><input type="text" name="janCode" th:value="${product.janCode}" disabled /></td>
               <td>
                 <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
-                <button class="btn submit" type="submit">Submit</button>
+                <button class="btn submit" type="submit" disabled>Submit</button>
                 <button class="btn delete" type="button"
                   th:onclick="'deleteProduct(' + ${product.id} + ')'">Delete</button>
               </td>
@@ -88,39 +95,6 @@
       </section>
     </section>
   </main>
-
-  <script>
-    function enableEdit(button) {
-      const row = button.closest("tr");
-      const inputs = row.querySelectorAll("input");
-      inputs.forEach(input => {
-        if (input.type !== "hidden") {
-          input.removeAttribute("readonly");
-        }
-      });
-    }
-
-    function toggleAddRow() {
-      const addRow = document.getElementById("addRow");
-      addRow.style.display = addRow.style.display === "none" ? "table-row-group" : "none";
-    }
-
-    function deleteProduct(productId) {
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = "/products/delete";
-
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = "id";
-      input.value = productId;
-
-      form.appendChild(input);
-      document.body.appendChild(form);
-      form.submit();
-    }
-  </script>
-
 </body>
 
 </html>

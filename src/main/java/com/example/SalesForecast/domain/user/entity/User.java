@@ -1,7 +1,6 @@
 package com.example.SalesForecast.domain.user.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDate; // ← DATE型に対応
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;

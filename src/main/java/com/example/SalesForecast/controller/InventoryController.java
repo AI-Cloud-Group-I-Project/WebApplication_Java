@@ -1,7 +1,18 @@
-// // 在庫管理ページ
-// package com.example.SalesForecast.controller;
+package com.example.SalesForecast.controller;
 
-// import org.springframework.stereotype.Controller;
-// import org.springframework.web.bind.annotation.PostMapping;
+import jakarta.servlet.http.HttpSession;
 
-// import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class InventoryController {
+    @GetMapping("/inventories")
+    public String showInventoryPage(Model model, HttpSession session) {
+        model.addAttribute("current_username", session.getAttribute("username"));
+        model.addAttribute("current_email", session.getAttribute("email"));
+
+        return "admin-inventories";
+    }
+}
