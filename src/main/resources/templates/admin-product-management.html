@@ -103,13 +103,13 @@
       </div>
 
       <section class="pagination">
-        <!-- 上一页按钮 -->
+        
         <a th:href="@{/products(page=${currentPage - 1})}"
         th:classappend="${currentPage == 0} ? ' disabled' : ''"
         class="page-btn arrow"
         th:if="${totalPages > 1}">&laquo;</a>
 
-        <!-- 中间页码按钮 -->
+        
         <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
         <a th:href="@{/products(page=${i})}"
           th:text="${i + 1}"
@@ -117,7 +117,7 @@
         </a>
         </span>
 
-        <!-- 下一页按钮 -->
+        
         <a th:href="@{/products(page=${currentPage + 1})}"
         th:classappend="${currentPage + 1 >= totalPages} ? ' disabled' : ''"
         class="page-btn arrow"
@@ -132,7 +132,7 @@
         method: 'POST'
       }).then(response => {
         if (response.ok) {
-          location.reload(); // 更新页面
+          location.reload(); 
         } else {
           alert("販売状態の変更に失敗しました");
         }
