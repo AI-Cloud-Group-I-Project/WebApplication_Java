@@ -46,6 +46,7 @@
             <th>銘柄</th>
             <th>値段（円）</th>
             <th>JANコード</th>
+            <th>販売状態</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -56,6 +57,7 @@
               <td><input type="text" name="name" placeholder="銘柄" required /></td>
               <td><input type="number" name="price" placeholder="値段" required /></td>
               <td><input type="text" name="janCode" placeholder="JANコード" required /></td>
+              <td><input type="hidden" name="status" value="1" /></td>
               <td>
                 <button class="btn submit" type="submit">Submit</button>
               </td>
@@ -71,11 +73,15 @@
               <td><input type="text" name="name" th:value="${product.name}" disabled /></td>
               <td><input type="number" name="price" th:value="${product.price}" disabled /></td>
               <td><input type="text" name="janCode" th:value="${product.janCode}" disabled /></td>
+              <td th:text="${product.status.id == 1 ? '販売中' : '販売終了'}"></td>
+
               <td>
                 <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
                 <button class="btn submit" type="submit" disabled>Submit</button>
-                <button class="btn delete" type="button"
-                  th:onclick="'deleteProduct(' + ${product.id} + ')'">Delete</button>
+                <button class="btn toggle" type="button" th:onclick="'toggleStatus(' + ${product.id} + ')'">
+                  <span th:text="${product.status.id == 1 ? '販売終了にする' : '販売再開'}"></span>
+                </button>
+
               </td>
             </form>
           </tr>
@@ -95,6 +101,21 @@
       </section>
     </section>
   </main>
+  <script>
+  function toggleStatus(productId) {
+    fetch('/products/toggleStatus/' + productId, {
+      method: 'POST'
+    }).then(response => {
+      if (response.ok) {
+        location.reload(); // 更新页面
+      } else {
+        alert("販売状態の変更に失敗しました");
+      }
+    });
+  }
+  </script>
+
+
 </body>
 
 </html>
