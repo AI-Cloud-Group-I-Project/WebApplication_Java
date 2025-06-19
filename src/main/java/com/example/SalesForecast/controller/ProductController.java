@@ -16,6 +16,7 @@ import com.example.SalesForecast.domain.product.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+
 import java.util.Optional;
 
 import java.util.List;
@@ -39,14 +44,26 @@ public class ProductController {
 
 
     @GetMapping("/products")
-    public String showProductManagementPage(Model model, HttpSession session) {
-        List<Product> productList = productService.getAllProducts();
-        model.addAttribute("productList", productList);
+    public String getProducts(
+            Model model,
+            HttpSession session,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        model.addAttribute("productList", productPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
+
+        
         model.addAttribute("current_username", session.getAttribute("username"));
         model.addAttribute("current_email", session.getAttribute("email"));
 
         return "admin-product-management";
     }
+
 
     @PostMapping("/products/update")
     public String updateProduct(@ModelAttribute Product updatedProduct) {
@@ -97,6 +114,7 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
 
 

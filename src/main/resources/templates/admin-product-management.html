@@ -103,12 +103,27 @@
       </div>
 
       <section class="pagination">
-        <button class="page-btn arrow" disabled>&laquo;</button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn arrow">&raquo;</button>
+        <!-- 上一页按钮 -->
+        <a th:href="@{/products(page=${currentPage - 1})}"
+        th:classappend="${currentPage == 0} ? ' disabled' : ''"
+        class="page-btn arrow"
+        th:if="${totalPages > 1}">&laquo;</a>
+
+        <!-- 中间页码按钮 -->
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+        <a th:href="@{/products(page=${i})}"
+          th:text="${i + 1}"
+          th:class="'page-btn' + (${i} == ${currentPage} ? ' active' : '')">
+        </a>
+        </span>
+
+        <!-- 下一页按钮 -->
+        <a th:href="@{/products(page=${currentPage + 1})}"
+        th:classappend="${currentPage + 1 >= totalPages} ? ' disabled' : ''"
+        class="page-btn arrow"
+        th:if="${totalPages > 1}">&raquo;</a>
       </section>
+
     </section>
   </main>
   <script>
