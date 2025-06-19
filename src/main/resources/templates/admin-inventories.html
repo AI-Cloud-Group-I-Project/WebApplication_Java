@@ -5,12 +5,9 @@
   <meta charset="UTF-8">
   <title>商品入荷と在庫ページ</title>
   <link rel="stylesheet" th:href="@{/css/admin-inventories.css}">
-  <!-- <link rel="stylesheet" href="../static/css/admin-inventories.css"> -->
-
 </head>
 
 <body>
-  <!-- 一覧表 -->
   <aside class="sidebar">
     <ul class="menu">
       <li class="menu-title">メニュー一覧</li>
@@ -23,11 +20,7 @@
     </ul>
   </aside>
 
-
-  <!-- メイン -->
-  <!-- メインコンテンツ -->
   <main class="main-content">
-    <!-- トップバー -->
     <div class="topbar">
       <div class="brand">H&amp;C BAR</div>
       <div class="topbar-right">
@@ -38,35 +31,24 @@
       </div>
     </div>
 
-
     <div class="section-container">
-      <h2>商品入荷入力（2025.5.31）</h2>
-      <form class="stock-form">
+      <h2>商品入荷入力（<span th:text="${T(java.time.LocalDate).now()}"></span>）</h2>
+      <form class="stock-form" th:action="@{/inventories/add}" method="post">
         <div class="form-grid">
           <div>
-            <label>銘柄</label>
-            <input type="text" placeholder="例: ホワイトビール">
+            <label>JANコード</label>
+            <input type="text" name="janCode" placeholder="例: 4901234567894" required>
           </div>
           <div>
             <label>入荷数量</label>
-            <input type="number" placeholder="例: 20">
-          </div>
-          <div>
-            <label>JANコード</label>
-            <input type="text" placeholder="例: 4901234567894">
+            <input type="number" name="quantity" placeholder="例: 20" min="0" required>
           </div>
         </div>
         <div class="button-row">
-          <button class="btn add" type="button">Add</button>
           <button class="btn submit" type="submit">Submit</button>
-          <!-- <button class="btn export" type="button">Edit</button> -->
-
-
-
         </div>
       </form>
     </div>
-
 
     <div class="section-container">
       <h2>商品在庫一覧</h2>
@@ -80,26 +62,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>ホワイトビール</td>
-            <td>36</td>
-            <td>2025.5.31</td>
-            <td>4901234567894</td>
-          </tr>
-          <tr>
-            <td>ラガー</td>
-            <td>48</td>
-            <td>2025.5.31</td>
-            <td>4901234567890</td>
-          </tr>
-          <tr>
-            <td>ペールエール</td>
-            <td>29</td>
-            <td>2025.5.31</td>
-            <td>4897054380143</td>
+          <tr th:each="inventory : ${inventoryList}">
+            <td th:text="${inventory.product.name}">銘柄</td>
+            <td>
+              <span th:text="${inventory.stockQuantity}">在庫</span>
+            </td>
+
+            <td th:text="${#temporals.format(inventory.updatedDate, 'yyyy.MM.dd')}">更新日</td>
+            <td th:text="${inventory.product.janCode}">JANコード</td>
           </tr>
         </tbody>
+
+
+
       </table>
+
       <section class="pagination">
         <button class="page-btn arrow" disabled>&laquo;</button>
         <button class="page-btn active">1</button>
@@ -108,7 +85,38 @@
         <button class="page-btn arrow">&raquo;</button>
       </section>
     </div>
+    <div class="section-container">
+    <h2>本日入力された入荷情報（編集可能）</h2>
+    <table class="product-table">
+      <thead>
+        <tr>
+          <th>銘柄</th>
+          <th>入荷数量</th>
+          <th>直近入荷日</th>
+          <th>JANコード</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="receipt : ${todayReceipts}">
+          <form th:action="@{/inventories/update}" method="post">
+            <td th:text="${receipt.product.name}">商品名</td>
+            <td>
+              <input type="hidden" name="productId" th:value="${receipt.product.id}" />
+              <input type="number" name="quantity" th:value="${receipt.quantity}" min="0" required />
+            </td>
+            <td th:text="${#temporals.format(receipt.receivedDate, 'yyyy.MM.dd')}">受領日</td>
+            <td th:text="${receipt.product.janCode}">JANコード</td>
+            <td>
+              <button class="btn submit" type="submit">Submit</button>
+            </td>
+          </form>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
   </main>
 </body>
-
 </html>
