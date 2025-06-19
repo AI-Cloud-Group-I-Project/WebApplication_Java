@@ -10,17 +10,21 @@ package com.example.SalesForecast.controller;
 
 import com.example.SalesForecast.domain.product.entity.Product;
 import com.example.SalesForecast.domain.product.entity.ProductStatus;
+import com.example.SalesForecast.domain.product.repository.ProductRepository;
 import com.example.SalesForecast.domain.product.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.util.Optional;
 
 import java.util.List;
 
@@ -29,6 +33,10 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductRepository productRepository;
+
+
 
     @GetMapping("/products")
     public String showProductManagementPage(Model model, HttpSession session) {
@@ -64,9 +72,32 @@ public class ProductController {
         return "redirect:/products";
     }
 
-    @PostMapping("/products/delete")
-    public String deleteProduct(@RequestParam("id") Integer id) {
-        productService.deleteProductById(id);
-        return "redirect:/products";
+    @PostMapping("/products/toggleStatus/{id}")
+    public ResponseEntity<Void> toggleStatus(@PathVariable Integer id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+
+            
+            ProductStatus currentStatus = product.getStatus();
+            ProductStatus newStatus = new ProductStatus();
+
+            
+            if (currentStatus.getId() == 1) {
+                newStatus.setId(2); // 「販売終了」
+            } else {
+                newStatus.setId(1); // 「販売中」
+            }
+
+            product.setStatus(newStatus);
+            productRepository.save(product);
+
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
+
+
 }
