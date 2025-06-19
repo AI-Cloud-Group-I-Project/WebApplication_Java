@@ -31,25 +31,31 @@
       </div>
     </div>
 
+    <!-- 商品入荷入力 -->
     <div class="section-container">
       <h2>商品入荷入力（<span th:text="${T(java.time.LocalDate).now()}"></span>）</h2>
-      <form class="stock-form" th:action="@{/inventories/add}" method="post">
-        <div class="form-grid">
-          <div>
-            <label>JANコード</label>
-            <input type="text" name="janCode" placeholder="例: 4901234567894" required>
-          </div>
-          <div>
-            <label>入荷数量</label>
-            <input type="number" name="quantity" placeholder="例: 20" min="0" required>
+
+      <form class="stock-form" th:action="@{/inventories/add}" method="post" id="inventoryForm">
+        <div id="input-container">
+          <div class="form-grid">
+            <div>
+              <label>JANコード</label>
+              <input type="text" name="janCodes" placeholder="例: 4901234567894" required>
+            </div>
+            <div>
+              <label>入荷数量</label>
+              <input type="number" name="quantities" placeholder="例: 20" min="0" required>
+            </div>
           </div>
         </div>
         <div class="button-row">
+          <button class="btn add" type="button" onclick="addInputRow()">Add</button>
           <button class="btn submit" type="submit">Submit</button>
         </div>
       </form>
     </div>
 
+    <!-- 商品在庫一覧 -->
     <div class="section-container">
       <h2>商品在庫一覧</h2>
       <table class="product-table">
@@ -64,17 +70,11 @@
         <tbody>
           <tr th:each="inventory : ${inventoryList}">
             <td th:text="${inventory.product.name}">銘柄</td>
-            <td>
-              <span th:text="${inventory.stockQuantity}">在庫</span>
-            </td>
-
+            <td><span th:text="${inventory.stockQuantity}">在庫</span></td>
             <td th:text="${#temporals.format(inventory.updatedDate, 'yyyy.MM.dd')}">更新日</td>
             <td th:text="${inventory.product.janCode}">JANコード</td>
           </tr>
         </tbody>
-
-
-
       </table>
 
       <section class="pagination">
@@ -85,38 +85,58 @@
         <button class="page-btn arrow">&raquo;</button>
       </section>
     </div>
+
+    <!-- 本日入力された入荷情報 -->
     <div class="section-container">
-    <h2>本日入力された入荷情報（編集可能）</h2>
-    <table class="product-table">
-      <thead>
-        <tr>
-          <th>銘柄</th>
-          <th>入荷数量</th>
-          <th>直近入荷日</th>
-          <th>JANコード</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr th:each="receipt : ${todayReceipts}">
-          <form th:action="@{/inventories/update}" method="post">
-            <td th:text="${receipt.product.name}">商品名</td>
-            <td>
-              <input type="hidden" name="productId" th:value="${receipt.product.id}" />
-              <input type="number" name="quantity" th:value="${receipt.quantity}" min="0" required />
-            </td>
-            <td th:text="${#temporals.format(receipt.receivedDate, 'yyyy.MM.dd')}">受領日</td>
-            <td th:text="${receipt.product.janCode}">JANコード</td>
-            <td>
-              <button class="btn submit" type="submit">Submit</button>
-            </td>
-          </form>
-        </tr>
-
-      </tbody>
-    </table>
-  </div>
-
+      <h2>本日入力された入荷情報（編集可能）</h2>
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>銘柄</th>
+            <th>入荷数量</th>
+            <th>直近入荷日</th>
+            <th>JANコード</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="receipt : ${todayReceipts}">
+            <form th:action="@{/inventories/update}" method="post">
+              <td th:text="${receipt.product.name}">商品名</td>
+              <td>
+                <input type="hidden" name="productId" th:value="${receipt.product.id}" />
+                <input type="number" name="quantity" th:value="${receipt.quantity}" min="0" required />
+              </td>
+              <td th:text="${#temporals.format(receipt.receivedDate, 'yyyy.MM.dd')}">受領日</td>
+              <td th:text="${receipt.product.janCode}">JANコード</td>
+              <td><button class="btn submit" type="submit">Submit</button></td>
+            </form>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </main>
+
+  <!-- 行追加の JavaScript -->
+  <script>
+    function addInputRow() {
+      const container = document.getElementById("input-container");
+
+      const newRow = document.createElement("div");
+      newRow.className = "form-grid";
+      newRow.innerHTML = `
+        <div>
+          <label>JANコード</label>
+          <input type="text" name="janCodes" placeholder="例: 4901234567894" required>
+        </div>
+        <div>
+          <label>入荷数量</label>
+          <input type="number" name="quantities" placeholder="例: 20" min="0" required>
+        </div>
+      `;
+      container.appendChild(newRow);
+    }
+  </script>
+
 </body>
 </html>
