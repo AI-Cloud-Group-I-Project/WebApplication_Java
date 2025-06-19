@@ -31,3 +31,22 @@
 .btn.toggle {
   background-color: rgb(156, 10, 10);
 }
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filter-toggle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+.filter-toggle input[type="checkbox"] {
+  margin-right: 8px;
+  transform: scale(1.2);
+}
