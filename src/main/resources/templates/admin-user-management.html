@@ -76,14 +76,13 @@
                     </select>
                   </td>
 
-                   <!-- ✅ ステータス選択欄 -->
-                 <td style="width: 10%;">
-                  <select name="status" disabled class="display-status">
-                   <option value="1" th:selected="${user.status == 1}">在職中</option>
-                   <option value="0" th:selected="${user.status == 0}">退職済み</option>
-                 </select>
-                 </td>
-
+                  <!-- ✅ ステータス選択欄 -->
+                  <td style="width: 10%;">
+                    <select name="status" disabled class="display-status">
+                      <option value="1" th:selected="${user.status == 1}">在職中</option>
+                      <option value="0" th:selected="${user.status == 0}">退職済み</option>
+                    </select>
+                  </td>
                  <td style="width: 35%;">
                   <input type="hidden" name="id" th:value="${user.id}" />
                   <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
