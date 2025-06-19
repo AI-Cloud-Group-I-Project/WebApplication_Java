@@ -21,10 +21,20 @@
 
 /* -------- 商品情報テーブルの入力欄 -------- */
 .product-table input {
-  width: 60px;
+  width: 80%; 
   padding: 6px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px; 
+}
+
+/* -------- 商品情報テーブルのセル -------- */
+.product-table td {
+  white-space: normal;  
+  word-break: break-word;
+  padding: 10px;
+  max-width: 200px; 
 }
 
 
