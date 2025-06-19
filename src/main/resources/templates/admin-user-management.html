@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <title>ユーザー管理</title>
-  <link rel="stylesheet" th:href="@{/css/admin-user-management.css}">
-  <!-- <link rel="stylesheet" href="../static/css/admin-user-management.css"> -->
+  <!-- <link rel="stylesheet" th:href="@{/css/admin-user-management.css}"> -->
+  <link rel="stylesheet" href="../static/css/admin-user-management.css">
   <script th:inline="javascript">
     window.roles = [
       { id: 1, name: "admin" },
@@ -13,8 +13,8 @@
       { id: 3, name: "viewer" }
     ];
   </script>
-  <script th:src="@{/js/admin-user-management.js}" defer></script>
-  <!-- <script src="../static/js/admin-user-management.js"></script> -->
+   <!-- <script th:src="@{/js/admin-user-management.js}" defer></script> -->
+  <script src="../static/js/admin-user-management.js"></script>
 </head>
 
 <body>
@@ -53,13 +53,14 @@
           <tr>
             <th style="width: 20%;">名前</th>
             <th style="width: 30%;">メール</th>
-            <th style="width: 15%;">権限</th>
-            <th style="width: 35%;">操作</th>
+            <th style="width: 10%;">権限</th>
+             <th style="width: 10%;">ステータス</th>
+            <th style="width: 30%;">操作</th>
           </tr>
         </thead>
 
         <tr th:each="user : ${users}">
-          <td colspan="4">
+          <td colspan="5">
             <form th:action="@{/users/update}" method="post" class="user-form">
               <table style="width: 100%;">
                 <tr>
@@ -68,18 +69,28 @@
                   </td>
                   <td style="width: 30%;"><input type="email" name="email" th:value="${user.email}" disabled
                       class="display-email" /></td>
-                  <td style="width: 15%;">
+                  <td style="width: 10%;">
                     <select name="role.id" disabled class="display-role">
                       <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"
                         th:selected="${role.id == user.role.id}"></option>
                     </select>
                   </td>
-                  <td style="width: 35%;">
-                    <input type="hidden" name="id" th:value="${user.id}" />
-                    <button class="btn edit" type="button">Edit</button>
-                    <button class="btn submit" type="submit" name="action" value="submit" disabled>Submit</button>
-                    <button class="btn reset" type="submit" name="action" value="reset">Password Reset</button>
-                  </td>
+
+                   <!-- ✅ ステータス選択欄 -->
+                 <td style="width: 10%;">
+                  <select name="status" disabled class="display-status">
+                   <option value="1" th:selected="${user.status == 1}">在職中</option>
+                   <option value="0" th:selected="${user.status == 0}">退職済み</option>
+                 </select>
+                 </td>
+
+                 <td style="width: 30%;">
+                  <input type="hidden" name="id" th:value="${user.id}" />
+                  <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
+                  <button class="btn submit" type="submit" name="action" value="submit" disabled>Submit</button>
+                  <button class="btn reset" type="submit" name="action" value="reset">Password Reset</button>
+                 </td>
+
                 </tr>
               </table>
             </form>

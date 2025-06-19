@@ -10,6 +10,11 @@
   margin-bottom: 30px;
 }
 
+.user-table {
+  table-layout: fixed; 
+}
+
+
 /* 入力欄・セレクトボックス */
 .user-table input,
 .user-table select {
@@ -38,6 +43,32 @@
   cursor: default;
   pointer-events: none;
 }
+
+/* -------- ユーザー管理テーブル列幅調整 -------- */
+.user-table thead th:nth-child(1),
+.user-table td:nth-child(1) {
+  width: 20%;
+}
+.user-table thead th:nth-child(2),
+.user-table td:nth-child(2) {
+  width: 30%;
+}
+.user-table thead th:nth-child(3),
+.user-table td:nth-child(3) {
+  width: 15%;
+}
+.user-table thead th:nth-child(4),
+.user-table td:nth-child(4) {
+  width: 15%;
+}
+.user-table thead th:nth-child(5),
+.user-table td:nth-child(5) {
+  width: 20%;
+}
+.user-table th, .user-table td {
+  min-width: 100px;
+}
+
 
 
 /* --- ホバー共通（無効なボタンを除外） --- */
