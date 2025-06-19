@@ -60,6 +60,7 @@
 }
 
 .days li {
+  padding: 5pt;
   display: inline-block;
   width: 13.6%;
   text-align: center;
@@ -79,4 +80,18 @@
   color: white;
   border-radius: 50%;
   padding: 5px;
+}
+
+
+.month .prev,
+.month .next {
+  /* 通常状態でもポインターにしたい場合はここに */
+  cursor: pointer;
+}
+
+.month .prev:hover,
+.month .next:hover {
+  /* ホバー時の追加スタイル例（任意） */
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
 }
