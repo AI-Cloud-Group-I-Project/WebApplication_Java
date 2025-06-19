@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <title>商品管理ページ</title>
-  <link rel="stylesheet" th:href="@{/css/admin-product-management.css}">
-  <!-- <link rel="stylesheet" href="../static/css/admin-product-management.css"> -->
-  <script th:src="@{/js/admin-product-management.js}" defer></script>
-  <!-- <script src="../static/js/admin-product-management.js" defer></script> -->
+  <!-- <link rel="stylesheet" th:href="@{/css/admin-product-management.css}"> -->
+  <link rel="stylesheet" href="../static/css/admin-product-management.css">
+  <!-- <script th:src="@{/js/admin-product-management.js}" defer></script> -->
+  <script src="../static/js/admin-product-management.js" defer></script>
 </head>
 
 <body>
@@ -73,13 +73,13 @@
               <td><input type="text" name="name" th:value="${product.name}" disabled /></td>
               <td><input type="number" name="price" th:value="${product.price}" disabled /></td>
               <td><input type="text" name="janCode" th:value="${product.janCode}" disabled /></td>
-              <td th:text="${product.status.id == 1 ? '販売中' : '販売終了'}"></td>
+              <td th:text="${product.status.id == 1 ? 'On Sale' : 'Sale Ended'}"></td>
 
               <td>
                 <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
                 <button class="btn submit" type="submit" disabled>Submit</button>
                 <button class="btn toggle" type="button" th:onclick="'toggleStatus(' + ${product.id} + ')'">
-                  <span th:text="${product.status.id == 1 ? '販売終了にする' : '販売再開'}"></span>
+                  <span th:text="${product.status.id == 1 ? 'Pause Sales' : 'Resume Sales'}"></span>
                 </button>
 
               </td>
@@ -102,17 +102,17 @@
     </section>
   </main>
   <script>
-  function toggleStatus(productId) {
-    fetch('/products/toggleStatus/' + productId, {
-      method: 'POST'
-    }).then(response => {
-      if (response.ok) {
-        location.reload(); // 更新页面
-      } else {
-        alert("販売状態の変更に失敗しました");
-      }
-    });
-  }
+    function toggleStatus(productId) {
+      fetch('/products/toggleStatus/' + productId, {
+        method: 'POST'
+      }).then(response => {
+        if (response.ok) {
+          location.reload(); // 更新页面
+        } else {
+          alert("販売状態の変更に失敗しました");
+        }
+      });
+    }
   </script>
 
 

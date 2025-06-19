@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <title>ユーザー管理</title>
-  <!-- <link rel="stylesheet" th:href="@{/css/admin-user-management.css}"> -->
-  <link rel="stylesheet" href="../static/css/admin-user-management.css">
+  <link rel="stylesheet" th:href="@{/css/admin-user-management.css}">
+  <!-- <link rel="stylesheet" href="../static/css/admin-user-management.css"> -->
   <script th:inline="javascript">
     window.roles = [
       { id: 1, name: "admin" },
@@ -13,8 +13,8 @@
       { id: 3, name: "viewer" }
     ];
   </script>
-   <!-- <script th:src="@{/js/admin-user-management.js}" defer></script> -->
-  <script src="../static/js/admin-user-management.js"></script>
+  <script th:src="@{/js/admin-user-management.js}" defer></script>
+  <!-- <script src="../static/js/admin-user-management.js"></script> -->
 </head>
 
 <body>
@@ -54,7 +54,7 @@
             <th style="width: 20%;">名前</th>
             <th style="width: 30%;">メール</th>
             <th style="width: 10%;">権限</th>
-             <th style="width: 10%;">ステータス</th>
+            <th style="width: 10%;">ステータス</th>
             <th style="width: 30%;">操作</th>
           </tr>
         </thead>
@@ -76,20 +76,20 @@
                     </select>
                   </td>
 
-                   <!-- ✅ ステータス選択欄 -->
-                 <td style="width: 10%;">
-                  <select name="status" disabled class="display-status">
-                   <option value="1" th:selected="${user.status == 1}">在職中</option>
-                   <option value="0" th:selected="${user.status == 0}">退職済み</option>
-                 </select>
-                 </td>
+                  <!-- ✅ ステータス選択欄 -->
+                  <td style="width: 10%;">
+                    <select name="status" disabled class="display-status">
+                      <option value="1" th:selected="${user.status == 1}">在職中</option>
+                      <option value="0" th:selected="${user.status == 0}">退職済み</option>
+                    </select>
+                  </td>
 
-                 <td style="width: 30%;">
-                  <input type="hidden" name="id" th:value="${user.id}" />
-                  <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
-                  <button class="btn submit" type="submit" name="action" value="submit" disabled>Submit</button>
-                  <button class="btn reset" type="submit" name="action" value="reset">Password Reset</button>
-                 </td>
+                  <td style="width: 30%;">
+                    <input type="hidden" name="id" th:value="${user.id}" />
+                    <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
+                    <button class="btn submit" type="submit" name="action" value="submit" disabled>Submit</button>
+                    <button class="btn reset" type="submit" name="action" value="reset">Password Reset</button>
+                  </td>
 
                 </tr>
               </table>
