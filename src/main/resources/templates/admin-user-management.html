@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <title>ユーザー管理</title>
-  <!-- <link rel="stylesheet" th:href="@{/css/admin-user-management.css}"> -->
-  <link rel="stylesheet" href="../static/css/admin-user-management.css">
+  <link rel="stylesheet" th:href="@{/css/admin-user-management.css}">
+  <!-- <link rel="stylesheet" href="../static/css/admin-user-management.css"> -->
   <script th:inline="javascript">
     window.roles = [
       { id: 1, name: "admin" },
@@ -13,8 +13,8 @@
       { id: 3, name: "viewer" }
     ];
   </script>
-   <!-- <script th:src="@{/js/admin-user-management.js}" defer></script> -->
-  <script src="../static/js/admin-user-management.js"></script>
+   <script th:src="@{/js/admin-user-management.js}" defer></script>
+  <!-- <script src="../static/js/admin-user-management.js"></script> -->
 </head>
 
 <body>
@@ -52,10 +52,10 @@
         <thead>
           <tr>
             <th style="width: 20%;">名前</th>
-            <th style="width: 30%;">メール</th>
+            <th style="width: 25%;">メール</th>
             <th style="width: 10%;">権限</th>
              <th style="width: 10%;">ステータス</th>
-            <th style="width: 30%;">操作</th>
+            <th style="width: 35%;">操作</th>
           </tr>
         </thead>
 
@@ -67,7 +67,7 @@
                   <td style=" width: 20%;"><input type="text" name="name" th:value="${user.name}" disabled
                       class="display-name" />
                   </td>
-                  <td style="width: 30%;"><input type="email" name="email" th:value="${user.email}" disabled
+                  <td style="width: 25%;"><input type="email" name="email" th:value="${user.email}" disabled
                       class="display-email" /></td>
                   <td style="width: 10%;">
                     <select name="role.id" disabled class="display-role">
@@ -84,7 +84,7 @@
                  </select>
                  </td>
 
-                 <td style="width: 30%;">
+                 <td style="width: 35%;">
                   <input type="hidden" name="id" th:value="${user.id}" />
                   <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
                   <button class="btn submit" type="submit" name="action" value="submit" disabled>Submit</button>

@@ -11,7 +11,7 @@
 }
 
 .user-table {
-  table-layout: fixed; 
+  table-layout: auto; 
 }
 
 
@@ -79,12 +79,39 @@
 
 /* レスポンシブ調整 */
 @media (max-width: 768px) {
+  /* テーブル全体をスクロール可能にする */
+  .user-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .user-table table {
+    min-width: 650px; /* 横幅を確保 */
+    table-layout: auto !important; /* 上書き */
+  }
+
+  .user-table th,
   .user-table td {
     font-size: 12px;
+    padding: 6px;
+  }
+
+  .user-table input,
+  .user-table select {
+    font-size: 12px;
+    padding: 4px;
+    width: 100%;
   }
 
   .btn {
-    font-size: 12px;
-    padding: 5px 10px;
+    font-size: 11px;
+    padding: 4px 6px;
+    white-space: nowrap;
+  }
+
+  .btn.reset {
+    font-size: 10px;
+    padding: 4px 5px;
   }
 }
