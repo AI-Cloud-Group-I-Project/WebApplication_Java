@@ -38,7 +38,14 @@
     </div>
 
     <section class="product-section">
+      <div class="section-header">
       <h2>商品管理</h2>
+      <label class="filter-toggle">
+        <input type="checkbox" id="showAvailableOnly" onchange="toggleFilter()">
+        販売中のみ表示
+      </label>
+    </div>
+
 
       <table class="product-table">
         <thead>
@@ -73,7 +80,10 @@
               <td><input type="text" name="name" th:value="${product.name}" disabled /></td>
               <td><input type="number" name="price" th:value="${product.price}" disabled /></td>
               <td><input type="text" name="janCode" th:value="${product.janCode}" disabled /></td>
-              <td th:text="${product.status.id == 1 ? 'On Sale' : 'Sale Ended'}"></td>
+              <td th:attr="data-status=${product.status.id}" 
+                  th:text="${product.status.id == 1 ? 'On Sale' : 'Sale Ended'}">
+              </td>
+
 
               <td>
                 <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
@@ -114,6 +124,30 @@
       });
     }
   </script>
+  <script>
+    function toggleFilter() {
+      const checked = document.getElementById('showAvailableOnly').checked;
+      const rows = document.querySelectorAll("tbody tr");
+
+      rows.forEach(row => {
+        const statusCell = row.querySelector("td[data-status]");
+        if (!statusCell) return;
+
+        const statusId = statusCell.getAttribute("data-status");
+
+        if (checked) {
+          if (statusId !== '1') {
+            row.style.display = "none";
+          } else {
+            row.style.display = "";
+          }
+        } else {
+          row.style.display = "";
+        }
+      });
+    }
+  </script>
+
 
 
 </body>
