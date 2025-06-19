@@ -23,7 +23,6 @@ public class InventoryController {
     @Autowired
     private ProductReceiptRepository productReceiptRepository;
 
-
     // 在庫一覧ページを表示
     @GetMapping("/inventories")
     public String showInventoryPage(Model model, HttpSession session) {
@@ -39,25 +38,32 @@ public class InventoryController {
         return "admin-inventories";
     }
 
-    // 商品入荷の登録
+    // 商品入荷の登録（複数行対応）
     @PostMapping("/inventories/add")
-    public String addInventory(
-            @RequestParam("quantity") Integer quantity,
-            @RequestParam("janCode") String janCode
+    public String addInventories(
+            @RequestParam("janCodes") List<String> janCodes,
+            @RequestParam("quantities") List<Integer> quantities
     ) {
-        if (quantity < 0) {
-            return "redirect:/inventories?error=negative";
-        }
+        for (int i = 0; i < janCodes.size(); i++) {
+            String janCode = janCodes.get(i);
+            Integer quantity = quantities.get(i);
 
-        try {
-            inventoryService.processStockEntry(janCode, quantity);
-        } catch (IllegalArgumentException e) {
-            return "redirect:/inventories?error=janCodeNotFound";
+            if (quantity < 0) {
+                continue;
+            }
+
+            try {
+                inventoryService.processStockEntry(janCode, quantity);
+            } catch (IllegalArgumentException e) {
+                // JANコードが不正な場合はスキップ
+                continue;
+            }
         }
 
         return "redirect:/inventories";
     }
 
+    // 入荷済み商品の編集（当日分のみ）
     @PostMapping("/inventories/update")
     public String updateInventory(
             @RequestParam("productId") Integer productId,
@@ -70,5 +76,4 @@ public class InventoryController {
         inventoryService.updateTodayInventory(productId, quantity);
         return "redirect:/inventories";
     }
-
 }
