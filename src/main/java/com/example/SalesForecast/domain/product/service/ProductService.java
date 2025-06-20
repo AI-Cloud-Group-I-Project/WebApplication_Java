@@ -40,6 +40,11 @@ public class ProductService {
     productRepository.deleteById(id);
 }
 
+    public List<Product> getAvailableProducts() {
+        return productRepository.findByStatusId(1); // status_id = 1（販売中）
+}
+
+
 }
 
 

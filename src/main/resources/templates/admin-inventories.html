@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
   <meta charset="UTF-8">
   <title>商品入荷と在庫ページ</title>
   <link rel="stylesheet" th:href="@{/css/admin-inventories.css}">
 </head>
-
 <body>
   <aside class="sidebar">
     <ul class="menu">
@@ -36,30 +34,54 @@
       <h2>商品入荷入力（<span th:text="${T(java.time.LocalDate).now()}"></span>）</h2>
 
       <div th:if="${param.error != null and param.error[0] == 'alreadyExists'}" 
-          style="color: red; font-weight: bold; margin-bottom: 10px;">
+           style="color: red; font-weight: bold; margin-bottom: 10px;">
         その商品の入荷情報は本日すでに入力されています。変更がある場合は、「本日入力された入荷情報（編集可能）」から変更してください。
       </div>
-
-
 
       <form class="stock-form" th:action="@{/inventories/add}" method="post" id="inventoryForm">
         <div id="input-container">
           <div class="form-grid">
             <div>
-              <label>JANコード</label>
-              <input type="text" name="janCodes" placeholder="例: 4901234567894" required>
+              <label>商品を選択</label>
+              <select name="janCodes[]" required>
+                <option value="" disabled selected>商品を選択してください</option>
+                <option th:each="product : ${availableProducts}"
+                        th:value="${product.janCode}"
+                        th:text="${product.name}"></option>
+              </select>
             </div>
             <div>
               <label>入荷数量</label>
-              <input type="number" name="quantities" placeholder="例: 20" min="0" required>
+              <input type="number" name="quantities[]" placeholder="例: 20" min="0" required>
             </div>
           </div>
         </div>
+
+        <div id="template-row" class="form-grid" style="display: none;">
+          <div>
+            <label>商品を選択</label>
+            <select name="janCodes[]" style="width: 100%;">
+              <!-- JavaScriptで中身を挿入 -->
+            </select>
+          </div>
+          <div>
+            <label>入荷数量</label>
+            <input type="number" name="quantities[]" placeholder="例: 20" min="0">
+          </div>
+        </div>
+
         <div class="button-row">
           <button class="btn add" type="button" onclick="addInputRow()">Add</button>
           <button class="btn submit" type="submit">Submit</button>
         </div>
       </form>
+    </div>
+
+    <div id="product-options-template" style="display: none;">
+      <option value="" disabled selected>商品を選択してください</option>
+      <option th:each="product : ${availableProducts}"
+              th:value="${product.janCode}"
+              th:text="${product.name}"></option>
     </div>
 
     <!-- 商品在庫一覧 -->
@@ -84,16 +106,9 @@
         </tbody>
       </table>
 
-      <section class="pagination">
-        <button class="page-btn arrow" disabled>&laquo;</button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn arrow">&raquo;</button>
-      </section>
     </div>
 
-    <!-- 本日入力された入荷情報 -->
+    <!-- 本日入力された入荷情報（編集可能） -->
     <div class="section-container">
       <h2>本日入力された入荷情報（編集可能）</h2>
       <table class="product-table">
@@ -124,26 +139,22 @@
     </div>
   </main>
 
-  <!-- 行追加の JavaScript -->
+  <!-- JavaScript -->
   <script>
     function addInputRow() {
       const container = document.getElementById("input-container");
+      const template = document.getElementById("template-row");
+      const newRow = template.cloneNode(true);
+      newRow.style.display = "flex";
+      newRow.removeAttribute("id");
 
-      const newRow = document.createElement("div");
-      newRow.className = "form-grid";
-      newRow.innerHTML = `
-        <div>
-          <label>JANコード</label>
-          <input type="text" name="janCodes" placeholder="例: 4901234567894" required>
-        </div>
-        <div>
-          <label>入荷数量</label>
-          <input type="number" name="quantities" placeholder="例: 20" min="0" required>
-        </div>
-      `;
+      const optionsHtml = document.getElementById("product-options-template").innerHTML;
+      console.log(optionsHtml);
+      const select = newRow.querySelector("select[name='janCodes[]']");
+      select.innerHTML = optionsHtml;
+
       container.appendChild(newRow);
     }
   </script>
-
 </body>
 </html>
