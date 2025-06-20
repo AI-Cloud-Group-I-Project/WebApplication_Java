@@ -19,4 +19,9 @@ public class WeatherService {
     public Optional<Weather> getByDate(LocalDate date) {
         return weatherRepository.findByDate(date);
     }
+
+    public Weather save(Weather weather) {
+        return weatherRepository.save(weather);
+    }
+
 }

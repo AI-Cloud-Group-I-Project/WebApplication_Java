@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ProductService {
@@ -43,4 +44,8 @@ public class ProductService {
         return productRepository.findAllByStatus_Id(statusId);
     }
 
+    public Product getById(Integer id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Product not found: " + id));
+    }
 }

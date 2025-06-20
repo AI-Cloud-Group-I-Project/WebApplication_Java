@@ -1,10 +1,19 @@
 package com.example.SalesForecast.domain.sales.service;
 
+import com.example.SalesForecast.domain.forecast.client.ForecastApiClient;
+import com.example.SalesForecast.domain.inventory.service.InventoryService;
 import com.example.SalesForecast.domain.product.entity.Product;
+import com.example.SalesForecast.domain.product.service.ProductService;
 import com.example.SalesForecast.domain.sales.dto.BeerInfoDto;
 import com.example.SalesForecast.domain.sales.entity.Sales;
 import com.example.SalesForecast.domain.sales.repository.SalesRepository;
+import com.example.SalesForecast.domain.user.entity.User;
+import com.example.SalesForecast.domain.weather.dto.WeatherDto;
 import com.example.SalesForecast.domain.weather.entity.Weather;
+import com.example.SalesForecast.domain.weather.service.WeatherService;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,9 +24,21 @@ import java.util.stream.Collectors;
 public class SalesService {
 
     private final SalesRepository salesRepository;
+    private final WeatherService weatherService;
+    private final ForecastApiClient forecastApiClient;
+    private final ProductService productService;
+    private final InventoryService inventoryService;
 
-    public SalesService(SalesRepository salesRepository) {
+    public SalesService(SalesRepository salesRepository,
+            WeatherService weatherService,
+            ForecastApiClient forecastApiClient,
+            ProductService productService,
+            InventoryService inventoryService) {
         this.salesRepository = salesRepository;
+        this.weatherService = weatherService;
+        this.forecastApiClient = forecastApiClient;
+        this.productService = productService;
+        this.inventoryService = inventoryService;
     }
 
     // 選択した条件で絞り込み
@@ -189,11 +210,8 @@ public class SalesService {
                 .collect(Collectors.toList());
     }
 
-    public List<BeerInfoDto> getBeerInfoByDate(
-            LocalDate date, List<Product> allProducts) {
-
+    public List<BeerInfoDto> getBeerInfoByDate(LocalDate date, List<Product> allProducts) {
         List<Sales> salesList = salesRepository.findBySalesDate(date);
-
         Map<Integer, Integer> qtyByProductId = salesList.stream()
                 .collect(Collectors.toMap(
                         s -> s.getProduct().getId(),
@@ -201,9 +219,9 @@ public class SalesService {
                         Integer::sum));
 
         return allProducts.stream()
-                // ── ここで filter を追加 ──
                 .filter(p -> qtyByProductId.getOrDefault(p.getId(), 0) > 0)
                 .map(p -> new BeerInfoDto(
+                        p.getId(),
                         p.getName(),
                         qtyByProductId.getOrDefault(p.getId(), 0),
                         p.getPrice().intValue(),
@@ -211,4 +229,66 @@ public class SalesService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void registerSales(LocalDate date, User user,
+            List<Integer> productIds,
+            List<Integer> quantities) {
+
+        // 1) Weather を取得 or 作成
+        Weather weather = weatherService.getByDate(date)
+                .orElseGet(() -> {
+                    WeatherDto dto = forecastApiClient.fetchWeather(date);
+                    Weather w = new Weather();
+                    w.setDate(LocalDate.parse(dto.getDate())); // String → LocalDate に変換
+                    w.setAverageTemperature(dto.getTemperature());
+                    w.setPrecipitation(dto.getPrecipitation());
+                    w.setWeatherCondition(dto.getWeather());
+
+                    // ここでエンティティを保存して返す
+                    return weatherService.save(w);
+                });
+
+        // ２）各行を登録 or 更新 ＋ 在庫更新
+        for (int i = 0; i < productIds.size(); i++) {
+            Integer pid = productIds.get(i);
+            Integer newQty = quantities.get(i);
+
+            // 既存 Sales を探す
+            Optional<Sales> opt = salesRepository
+                    .findBySalesDateAndProduct_Id(date, pid);
+
+            if (opt.isPresent()) {
+                // --- 更新する場合 ---
+                Sales existing = opt.get();
+                int oldQty = existing.getQuantity();
+                int delta = newQty - oldQty;
+
+                // 在庫を差分で調整
+                if (delta > 0) {
+                    inventoryService.deductStock(pid, delta);
+                } else if (delta < 0) {
+                    inventoryService.addStock(pid, -delta); // 必要なら在庫を戻すメソッドを用意
+                }
+
+                existing.setQuantity(newQty);
+                existing.setEditedDate(LocalDate.now());
+                salesRepository.save(existing);
+
+            } else {
+                // --- 新規挿入する場合 ---
+                // 在庫をまるごと引く
+                inventoryService.deductStock(pid, newQty);
+
+                Sales sale = new Sales();
+                sale.setProduct(productService.getById(pid));
+                sale.setUser(user);
+                sale.setWeather(weather);
+                sale.setQuantity(newQty);
+                sale.setSalesDate(date);
+                sale.setCreatedDate(LocalDate.now());
+                sale.setEditedDate(LocalDate.now());
+                salesRepository.save(sale);
+            }
+        }
+    }
 }

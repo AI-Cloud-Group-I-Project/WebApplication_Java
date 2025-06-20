@@ -1,24 +1,21 @@
-// package com.hopandcraft.forecastsystem.domain.forecast.client;
+package com.example.SalesForecast.domain.forecast.client;
 
-// import com.hopandcraft.forecastsystem.dto.response.ForecastResponseDto;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.stereotype.Component;
-// import org.springframework.web.client.RestTemplate;
+import org.springframework.stereotype.Component;
 
-// @Component
-// public class ForecastApiClient {
+import com.example.SalesForecast.domain.weather.dto.WeatherDto;
 
-// private final RestTemplate restTemplate;
-// private final String forecastApiUrl =
-// "https://your-azure-function-url/api/forecast"; // ←実際のURLに置換
+import java.time.LocalDate;
 
-// public ForecastApiClient() {
-// this.restTemplate = new RestTemplate();
-// }
+@Component
+public class ForecastApiClient {
+    public WeatherDto fetchWeather(LocalDate date) {
 
-// public ForecastResponseDto callForecastApi() {
-// ResponseEntity<ForecastResponseDto> response =
-// restTemplate.getForEntity(forecastApiUrl, ForecastResponseDto.class);
-// return response.getBody();
-// }
-// }
+        // テスト用ダミーデータ返却
+        return new WeatherDto(
+                date.toString(),
+                25.0f, // temperature
+                0.0f, // precipitation
+                "曇天" // weather
+        );
+    }
+}

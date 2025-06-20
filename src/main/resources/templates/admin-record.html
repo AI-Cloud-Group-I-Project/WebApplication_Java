@@ -8,12 +8,10 @@
   <!-- <link rel="stylesheet" href="../static/css/admin-record.css"> -->
   <script th:src="@{/js/admin-record.js}" defer></script>
   <!-- <script src="../static/js/admin-record.js" defer></script> -->
-
 </head>
 
 <body>
-
-  <!--  一覧表 -->
+  <!-- サイドバー -->
   <aside class="sidebar">
     <ul class="menu">
       <li class="menu-title">メニュー一覧</li>
@@ -39,44 +37,75 @@
       </div>
     </div>
 
-    <!-- ページ先頭に追加 -->
+    <!-- GET：日付切り替え用フォーム -->
     <form id="dateForm" th:action="@{/record}" method="get">
       <input type="hidden" name="year" id="yearInput" th:value="${selectedYear}">
       <input type="hidden" name="month" id="monthInput" th:value="${selectedMonth}">
       <input type="hidden" name="day" id="dayInput" th:value="${selectedDay}">
+
+      <section class="calendar-section">
+        <h2>日付選択</h2>
+        <div class="month">
+          <ul>
+            <li class="prev">&#10094;</li>
+            <li class="next">&#10095;</li>
+            <li class="month-year" style="text-align:center"></li>
+          </ul>
+        </div>
+        <ul class="weekdays">
+          <li>Mo</li>
+          <li>Tu</li>
+          <li>We</li>
+          <li>Th</li>
+          <li>Fr</li>
+          <li>Sa</li>
+          <li>Su</li>
+        </ul>
+        <ul class="days"></ul>
+      </section>
     </form>
 
+    <!-- POST：実績登録用フォーム -->
+    <form id="recordForm" th:action="@{/record}" method="post">
+      <!-- hidden で選択日を再送 -->
+      <input type="hidden" name="year" th:value="${selectedYear}">
+      <input type="hidden" name="month" th:value="${selectedMonth}">
+      <input type="hidden" name="day" th:value="${selectedDay}">
 
-    <!-- 🔹 日付選択 -->
-    <section class="calendar-section">
-      <h2>日付選択</h2>
+      <section class="product-section">
+        <h2>商品情報</h2>
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>銘柄</th>
+              <th>販売数</th>
+              <th>値段（円/本）</th>
+              <th>JANコード</th>
+            </tr>
+          </thead>
+          <tbody id="productRows">
+            <tr th:each="beer : ${beer_info_list}">
+              <td th:text="${beer.beerName}"></td>
+              <!-- productId を隠し送信 -->
+              <input type="hidden" name="productId" th:value="${beer.productId}" />
+              <td><input type="number" name="quantity" th:value="${beer.quantity}" disabled /></td>
+              <td th:text="${beer.price}"></td>
+              <td th:text="${beer.janCode}"></td>
+            </tr>
+          </tbody>
+        </table>
 
-      <div class="month">
-        <ul>
-          <li class="prev">&#10094;</li>
-          <li class="next">&#10095;</li>
-          <li class="month-year" style="text-align:center"></li>
-        </ul>
-      </div>
+        <div class="button-row">
+          <button type="button" class="btn add">Add</button>
+          <button type="submit" class="btn submit" disabled>Submit</button>
+          <button type="button" class="btn edit">Edit</button>
+        </div>
+      </section>
+    </form>
 
-      <ul class="weekdays">
-        <li>Mo</li>
-        <li>Tu</li>
-        <li>We</li>
-        <li>Th</li>
-        <li>Fr</li>
-        <li>Sa</li>
-        <li>Su</li>
-      </ul>
-
-      <ul class="days"></ul>
-    </section>
-
-
-
+    <!-- 新規行テンプレート -->
     <template id="new-row-template">
       <tr>
-        <!-- 銘柄プルダウン -->
         <td>
           <select name="productId" required>
             <option value="" disabled selected>選択してください</option>
@@ -85,54 +114,11 @@
             </option>
           </select>
         </td>
-        <!-- 販売数 -->
-        <td>
-          <input type="number" name="quantity" value="" min="1" required>
-        </td>
-        <!-- 値段 -->
-        <td>
-          <input type="text" name="price" value="" readonly>
-        </td>
-        <!-- JANコード -->
-        <td>
-          <input type="text" name="janCode" value="" readonly>
-        </td>
+        <td><input type="number" name="quantity" value="" min="1" required></td>
+        <td><input type="text" name="price" value="" readonly></td>
+        <td><input type="text" name="janCode" value="" readonly></td>
       </tr>
     </template>
-
-
-    <!-- 🔹 商品情報 -->
-    <section class="product-section">
-      <h2>商品情報</h2>
-      <table class="product-table">
-        <thead>
-          <tr>
-            <th>銘柄</th>
-            <th>販売数</th>
-            <th>値段（円/本）</th>
-            <th>JANコード</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr th:each="beer : ${beer_info_list}">
-            <td th:text="${beer.beer_name}"></td>
-            <td>
-              <input type="number" name="quantity" th:value="${beer.quantity}" disabled />
-            </td>
-            <td th:text="${beer.price}"></td>
-            <td th:text="${beer.jan_code}"></td>
-          </tr>
-        </tbody>
-
-      </table>
-      <div class="button-row">
-        <button class="btn add">Add</button>
-        <button class="btn submit" disabled>Submit</button>
-        <button class="btn edit">Edit</button>
-      </div>
-    </section>
-
   </main>
 </body>
 

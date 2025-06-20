@@ -28,10 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
 import java.util.Optional;
-
-import java.util.List;
 
 @Controller
 public class ProductController {
@@ -40,8 +37,6 @@ public class ProductController {
     private ProductService productService;
     @Autowired
     private ProductRepository productRepository;
-
-
 
     @GetMapping("/products")
     public String getProducts(
@@ -57,13 +52,11 @@ public class ProductController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productPage.getTotalPages());
 
-        
         model.addAttribute("current_username", session.getAttribute("username"));
         model.addAttribute("current_email", session.getAttribute("email"));
 
         return "admin-product-management";
     }
-
 
     @PostMapping("/products/update")
     public String updateProduct(@ModelAttribute Product updatedProduct) {
@@ -95,11 +88,9 @@ public class ProductController {
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
 
-            
             ProductStatus currentStatus = product.getStatus();
             ProductStatus newStatus = new ProductStatus();
 
-            
             if (currentStatus.getId() == 1) {
                 newStatus.setId(2); // 「販売終了」
             } else {
@@ -114,8 +105,5 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
-
 
 }
