@@ -44,3 +44,18 @@
   width: 100%;
   font-size: 15px;
 }
+
+.form-grid {
+  display: flex;
+  gap: 20px; /* 要素間の余白 */
+}
+
+.form-grid > div {
+  flex: 1; /* 1:1 の比率にする */
+}
+
+.form-grid select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}

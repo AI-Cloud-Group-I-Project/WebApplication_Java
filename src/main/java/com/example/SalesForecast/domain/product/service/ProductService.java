@@ -63,4 +63,9 @@ public class ProductService {
     public List<Product> getProductsByStatusId(int statusId) {
         return productRepository.findAllByStatus_Id(statusId);
     }
+
+    public List<Product> getAvailableProducts() {
+        return productRepository.findByStatusId(1); // status_id = 1（販売中）
+}
+
 }

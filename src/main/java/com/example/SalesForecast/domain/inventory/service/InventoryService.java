@@ -29,8 +29,16 @@ public class InventoryService {
     private ProductRepository productRepository;
 
     public List<Inventory> getAllInventories() {
-        return inventoryRepository.findAll();
-    }
+        List<Inventory> all = inventoryRepository.findAll();
+
+        // status_id = 1（販売中）の商品だけにフィルタ
+        return all.stream()
+            .filter(i -> i.getProduct() != null &&
+                         i.getProduct().getStatus() != null &&
+                         i.getProduct().getStatus().getId() == 1)
+            .toList();
+}
+
 
     public void processStockEntry(String janCode, int quantity) {
         // JANコードから商品を取得
