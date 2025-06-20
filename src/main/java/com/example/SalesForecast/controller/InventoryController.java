@@ -38,11 +38,11 @@ public class InventoryController {
         return "admin-inventories";
     }
 
-    // 商品入荷の登録（複数行対応）
+   // 商品入荷の登録（複数行対応）
     @PostMapping("/inventories/add")
     public String addInventories(
-            @RequestParam("janCodes") List<String> janCodes,
-            @RequestParam("quantities") List<Integer> quantities
+        @RequestParam("janCodes") List<String> janCodes,
+        @RequestParam("quantities") List<Integer> quantities
     ) {
         for (int i = 0; i < janCodes.size(); i++) {
             String janCode = janCodes.get(i);
@@ -57,11 +57,15 @@ public class InventoryController {
             } catch (IllegalArgumentException e) {
                 // JANコードが不正な場合はスキップ
                 continue;
+             } catch (IllegalStateException e) {
+                System.out.println("【ログ】入荷済み商品の重複入力: " + janCode);
+                return "redirect:/inventories?error=alreadyExists";
             }
         }
 
         return "redirect:/inventories";
     }
+
 
     // 入荷済み商品の編集（当日分のみ）
     @PostMapping("/inventories/update")

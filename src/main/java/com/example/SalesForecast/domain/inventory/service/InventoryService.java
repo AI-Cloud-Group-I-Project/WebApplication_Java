@@ -41,6 +41,10 @@ public class InventoryService {
 
         Integer productId = product.getId();
 
+        if (productReceiptRepository.existsByProductIdAndReceivedDate(productId, LocalDate.now())) {
+            throw new IllegalStateException("この商品の入荷情報は本日すでに登録されています。");
+        }
+
         // 1. 入荷履歴に追加
         ProductReceipt receipt = new ProductReceipt();
         receipt.setProduct(product);
