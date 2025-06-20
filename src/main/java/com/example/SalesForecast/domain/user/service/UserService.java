@@ -41,7 +41,7 @@ public class UserService {
     }
 
     @Transactional
-    public void createUserWithCredential(String name, String email, Integer roleId) {
+    public void createUserWithCredential(String name, String email, Integer roleId, String status) {
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new IllegalArgumentException("ロールが見つかりません"));
 
@@ -49,7 +49,7 @@ public class UserService {
         user.setName(name);
         user.setEmail(email);
         user.setRole(role);
-        user.setStatus("active");
+        user.setStatus(status);
 
         User savedUser = userRepository.save(user); // IDが確定
 
@@ -63,7 +63,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserInfo(Integer id, String name, String email, Integer roleId) {
+    public void updateUserInfo(Integer id, String name, String email, Integer roleId, String status) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
 
@@ -73,6 +73,7 @@ public class UserService {
         user.setName(name);
         user.setEmail(email);
         user.setRole(role);
+        user.setStatus(status);
 
         userRepository.save(user);
     }
