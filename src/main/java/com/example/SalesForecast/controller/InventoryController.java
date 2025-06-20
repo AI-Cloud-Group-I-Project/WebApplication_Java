@@ -4,6 +4,8 @@ import com.example.SalesForecast.domain.inventory.entity.Inventory;
 import com.example.SalesForecast.domain.inventory.entity.ProductReceipt;
 import com.example.SalesForecast.domain.inventory.repository.ProductReceiptRepository;
 import com.example.SalesForecast.domain.inventory.service.InventoryService;
+import com.example.SalesForecast.domain.product.entity.Product;
+import com.example.SalesForecast.domain.product.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class InventoryController {
     @Autowired
     private ProductReceiptRepository productReceiptRepository;
 
+    @Autowired
+    private ProductService productService;
+
     // 在庫一覧ページを表示
     @GetMapping("/inventories")
     public String showInventoryPage(Model model, HttpSession session) {
@@ -34,6 +39,9 @@ public class InventoryController {
 
         List<ProductReceipt> todayReceipts = productReceiptRepository.findByReceivedDate(LocalDate.now());
         model.addAttribute("todayReceipts", todayReceipts);
+
+        List<Product> availableProducts = productService.getAvailableProducts();
+        model.addAttribute("availableProducts", availableProducts);
 
         return "admin-inventories";
     }
