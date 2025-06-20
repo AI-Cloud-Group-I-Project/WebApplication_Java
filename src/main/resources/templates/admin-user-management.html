@@ -47,7 +47,15 @@
 
     <!-- ユーザー管理セクション -->
     <section class="user-section">
-      <h2>ユーザー一覧</h2>
+      <div class="section-header">
+        <h2>ユーザー一覧</h2>
+        <label class="filter-toggle">
+          <input type="checkbox" id="showActiveOnly" onchange="toggleUserFilter()">
+          在職中のみ表示
+        </label>
+      </div>
+
+
       <table class="user-table">
         <thead>
           <tr>
@@ -59,7 +67,7 @@
           </tr>
         </thead>
 
-        <tr th:each="user : ${users}">
+        <tr th:each="user : ${users}" th:attr="data-status=${user.status}">
           <td colspan="5">
             <form th:action="@{/users/update}" method="post" class="user-form">
               <table style="width: 100%;">
@@ -102,6 +110,29 @@
           <button type="submit" class="btn add">Add</button>
         </form>
       </div>
+
+      <section class="pagination">
+        
+        <a th:href="@{/products(page=${currentPage - 1})}"
+        th:classappend="${currentPage == 0} ? ' disabled' : ''"
+        class="page-btn arrow"
+        th:if="${totalPages > 1}">&laquo;</a>
+
+        
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+        <a th:href="@{/products(page=${i})}"
+          th:text="${i + 1}"
+          th:class="'page-btn' + (${i} == ${currentPage} ? ' active' : '')">
+        </a>
+        </span>
+
+        
+        <a th:href="@{/products(page=${currentPage + 1})}"
+        th:classappend="${currentPage + 1 >= totalPages} ? ' disabled' : ''"
+        class="page-btn arrow"
+        th:if="${totalPages > 1}">&raquo;</a>
+      </section>
+
     </section>
   </main>
   <script>
@@ -114,7 +145,27 @@
       const submitBtn = form.querySelector(".submit");
       if (submitBtn) submitBtn.disabled = false;
     }
+
+
+    // ✅ 在職中のみ表示する機能（checkbox）
+    function toggleUserFilter() {
+      const checkbox = document.getElementById("showActiveOnly");
+      const rows = document.querySelectorAll("tr[data-status]");
+
+
+      rows.forEach(row => {
+        const status = row.getAttribute("data-status");
+        if (checkbox.checked) {
+         
+          row.style.display = (status === "active") ? "" : "none";
+        } else {
+         
+          row.style.display = "";
+        }
+      });
+    }
   </script>
+
 
 </body>
 

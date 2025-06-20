@@ -9,6 +9,9 @@ import com.example.SalesForecast.domain.user.repository.UserRepository;
 import com.example.SalesForecast.util.PasswordUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -81,4 +84,9 @@ public class UserService {
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }
+
+    public Page<User> getUsersByPage(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
 }
