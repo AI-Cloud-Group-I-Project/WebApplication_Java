@@ -100,4 +100,29 @@ public class InventoryService {
         inventoryRepository.save(inventory);
     }
 }
+        // 商品登録時に初期在庫0件を自動追加（履歴は残す）
+        public void addInitialInventory(Product product) {
+
+
+            // 1. 入荷履歴（ProductReceipt）を 0 個で登録
+            ProductReceipt receipt = new ProductReceipt();
+            receipt.setProduct(product);
+            receipt.setQuantity(0);                             // ← 数量を 0 に変更
+            receipt.setReceivedDate(LocalDate.now());
+            receipt.setEditedDate(LocalDateTime.now());
+            productReceiptRepository.save(receipt);
+
+
+            // 2. Inventory（在庫）も 0 個で初期化
+            Inventory inventory = inventoryRepository.findByProductId(product.getId());
+            if (inventory == null) {
+                inventory = new Inventory(product.getId(), 0, LocalDateTime.now()); // ← 0 に変更
+            } else {
+                inventory.setStockQuantity(0);                                       // ← ここも 0
+                inventory.setUpdatedDate(LocalDateTime.now());
+            }
+            inventoryRepository.save(inventory);
+        }
+
+
 }
