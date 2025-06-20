@@ -24,21 +24,24 @@ public class ProductService {
     public void updateProduct(Product updatedProduct) {
         if (updatedProduct.getStatus() == null) {
             ProductStatus defaultStatus = new ProductStatus();
-            defaultStatus.setId(1);  // 'available' のIDを仮で設定
+            defaultStatus.setId(1); // 'available' のIDを仮で設定
             updatedProduct.setStatus(defaultStatus);
         }
 
-    productRepository.save(updatedProduct);
-}
-
+        productRepository.save(updatedProduct);
+    }
 
     public void addProduct(Product product) {
-    productRepository.save(product);
+        productRepository.save(product);
     }
 
     public void deleteProductById(Integer id) {
-    productRepository.deleteById(id);
-}
+        productRepository.deleteById(id);
+    }
+
+    public List<Product> getProductsByStatusId(int statusId) {
+        return productRepository.findAllByStatus_Id(statusId);
+    }
 
     public List<Product> getAvailableProducts() {
         return productRepository.findByStatusId(1); // status_id = 1（販売中）
@@ -46,6 +49,3 @@ public class ProductService {
 
 
 }
-
-
-

@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
   <meta charset="UTF-8">
   <title>ユーザー管理</title>
   <link rel="stylesheet" th:href="@{/css/admin-user-management.css}">
-  <!-- <link rel="stylesheet" href="../static/css/admin-user-management.css"> -->
   <script th:inline="javascript">
     window.roles = [
       { id: 1, name: "admin" },
@@ -13,13 +11,11 @@
       { id: 3, name: "viewer" }
     ];
   </script>
-   <script th:src="@{/js/admin-user-management.js}" defer></script>
-  <!-- <script src="../static/js/admin-user-management.js"></script> -->
 </head>
 
-<body>
 
-  <!-- 左側メニュー -->
+<body>
+  <!-- サイドバー -->
   <aside class="sidebar">
     <ul class="menu">
       <li class="menu-title">メニュー一覧</li>
@@ -32,7 +28,8 @@
     </ul>
   </aside>
 
-  <!-- メインコンテンツ -->
+
+  <!-- メイン -->
   <main class="main-content">
     <!-- トップバー -->
     <div class="topbar">
@@ -45,77 +42,152 @@
       </div>
     </div>
 
-    <!-- ユーザー管理セクション -->
+
+    <!-- ユーザー管理 -->
     <section class="user-section">
-      <h2>ユーザー一覧</h2>
+      <div class="section-header">
+        <h2>ユーザー一覧</h2>
+        <label class="filter-toggle">
+          <input type="checkbox" id="showActiveOnly" onchange="toggleUserFilter()">
+          在職中のみ表示
+        </label>
+      </div>
+
+
       <table class="user-table">
         <thead>
           <tr>
             <th style="width: 20%;">名前</th>
             <th style="width: 25%;">メール</th>
             <th style="width: 10%;">権限</th>
-             <th style="width: 10%;">ステータス</th>
+            <th style="width: 10%;">ステータス</th>
             <th style="width: 35%;">操作</th>
           </tr>
         </thead>
 
-        <tr th:each="user : ${users}">
-          <td colspan="5">
-            <form th:action="@{/users/update}" method="post" class="user-form">
-              <table style="width: 100%;">
-                <tr>
-                  <td style=" width: 20%;"><input type="text" name="name" th:value="${user.name}" disabled
-                      class="display-name" />
-                  </td>
-                  <td style="width: 25%;"><input type="email" name="email" th:value="${user.email}" disabled
-                      class="display-email" /></td>
-                  <td style="width: 10%;">
-                    <select name="role.id" disabled class="display-role">
-                      <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"
-                        th:selected="${role.id == user.role.id}"></option>
-                    </select>
-                  </td>
 
-                  <!-- ✅ ステータス選択欄 -->
-                  <td style="width: 10%;">
-                  <select name="status" disabled class="display-status">
-                    <option value="active" th:selected="${user.status == 'active'}">在職中</option>
-                    <option value="retired" th:selected="${user.status == 'retired'}">退職済み</option>
-                  </select>
-                  </td>
+        <!-- Add 行（隠し） -->
+        <tbody>
+          <tr id="addRow" style="display: none;" data-status="active">
+            <td colspan="5">
+              <form th:action="@{/users/update}" method="post" class="user-form">
+                <table style="width: 100%;">
+                  <tr>
+                    <td style="width: 20%;"><input type="text" name="name" placeholder="名前" required /></td>
+                    <td style="width: 25%;"><input type="email" name="email" placeholder="メール" required /></td>
+                    <td style="width: 10%;">
+                      <select name="role.id" required>
+                        <option value="1">admin</option>
+                        <option value="2">user</option>
+                        <option value="3">viewer</option>
+                      </select>
+                    </td>
+                    <td style="width: 10%;">
+                      <select name="status" required onchange="updateStatusAttr(this)">
+                        <option value="active" selected>在職中</option>
+                        <option value="retired">退職済み</option>
+                      </select>
+                    </td>
+                    <td style="width: 35%;">
+                      <button class="btn submit" type="submit" name="action" value="submit">Submit</button>
+                    </td>
+                  </tr>
+                </table>
+              </form>
+            </td>
+          </tr>
+        </tbody>
 
-                  <td style="width: 35%;">
-                    <input type="hidden" name="id" th:value="${user.id}" />
-                    <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
-                    <button class="btn submit" type="submit" name="action" value="submit" disabled>Submit</button>
-                    <button class="btn reset" type="submit" name="action" value="reset">Password Reset</button>
-                  </td>
 
-                </tr>
-              </table>
-            </form>
-          </td>
-        </tr>
+        <!-- ユーザー一覧 -->
+        <tbody>
+          <tr th:each="user : ${users}" th:attr="data-status=${user.status}">
+            <td colspan="5">
+              <form th:action="@{/users/update}" method="post" class="user-form">
+                <table style="width: 100%;">
+                  <tr>
+                    <td style="width: 20%;"><input type="text" name="name" th:value="${user.name}" disabled /></td>
+                    <td style="width: 25%;"><input type="email" name="email" th:value="${user.email}" disabled /></td>
+                    <td style="width: 10%;">
+                      <select name="role.id" disabled>
+                        <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}" th:selected="${role.id == user.role.id}"></option>
+                      </select>
+                    </td>
+                    <td style="width: 10%;">
+                      <select name="status" disabled>
+                        <option value="active" th:selected="${user.status == 'active'}">在職中</option>
+                        <option value="retired" th:selected="${user.status == 'retired'}">退職済み</option>
+                      </select>
+                    </td>
+                    <td style="width: 35%;">
+                      <input type="hidden" name="id" th:value="${user.id}" />
+                      <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
+                      <button class="btn submit" type="submit" name="action" value="submit" disabled>Submit</button>
+                      <button class="btn reset" type="submit" name="action" value="reset">Password Reset</button>
+                    </td>
+                  </tr>
+                </table>
+              </form>
+            </td>
+          </tr>
+        </tbody>
       </table>
+
+
+      <!-- Add ボタン -->
       <div class="button-row">
-        <form>
-          <button type="submit" class="btn add">Add</button>
-        </form>
+        <button type="button" class="btn add" onclick="toggleAddRow()">Add</button>
       </div>
+
+
+      <!-- Pagination -->
+      <section class="pagination">
+        <a th:href="@{/users(page=${currentPage - 1})}" th:classappend="${currentPage == 0} ? ' disabled'" class="page-btn arrow" th:if="${totalPages > 1}">&laquo;</a>
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+          <a th:href="@{/users(page=${i})}" th:text="${i + 1}" th:class="'page-btn' + (${i} == ${currentPage} ? ' active' : '')"></a>
+        </span>
+        <a th:href="@{/users(page=${currentPage + 1})}" th:classappend="${currentPage + 1 >= totalPages} ? ' disabled'" class="page-btn arrow" th:if="${totalPages > 1}">&raquo;</a>
+      </section>
     </section>
   </main>
+
+
+  <!-- JS -->
   <script>
-    function enableEdit(button) {
-      const form = button.closest("form");
-      const inputs = form.querySelectorAll("input, select");
-      inputs.forEach(el => el.disabled = false);
+    function enableEdit(btn) {
+      const form = btn.closest("form");
+      form.querySelectorAll("input, select").forEach(el => el.disabled = false);
+      form.querySelector(".submit").disabled = false;
+    }
 
 
-      const submitBtn = form.querySelector(".submit");
-      if (submitBtn) submitBtn.disabled = false;
+    function toggleUserFilter() {
+      const checkbox = document.getElementById("showActiveOnly");
+      const rows = document.querySelectorAll("tr[data-status]");
+
+
+      rows.forEach(row => {
+        // ⬇️ addRow は無視
+        if (row.id === "addRow") return;
+
+
+        const status = row.getAttribute("data-status");
+        row.style.display = checkbox.checked && status !== "active" ? "none" : "";
+      });
+    }
+
+
+
+    function updateStatusAttr(sel) {
+      const tr = sel.closest("tr");
+      if (tr) tr.setAttribute("data-status", sel.value);
+    }
+
+
+    function toggleAddRow() {
+      const row = document.getElementById("addRow");
+      row.style.display = (row.style.display === "none" || !row.style.display) ? "" : "none";
     }
   </script>
-
 </body>
-
 </html>

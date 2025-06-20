@@ -15,4 +15,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     List<Product> findByStatusId(Integer statusId);
 
+//     List<Product> findAllByStatus_Id(Integer statusId);
+
+
 }
