@@ -12,4 +12,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query("SELECT DISTINCT p.name FROM Product p ORDER BY p.name")
     List<String> findDistinctProductNames();
+
+    List<Product> findAllByStatus_Id(Integer statusId);
+
 }

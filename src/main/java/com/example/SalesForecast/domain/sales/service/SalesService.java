@@ -1,10 +1,13 @@
 package com.example.SalesForecast.domain.sales.service;
 
+import com.example.SalesForecast.domain.product.entity.Product;
+import com.example.SalesForecast.domain.sales.dto.BeerInfoDto;
 import com.example.SalesForecast.domain.sales.entity.Sales;
 import com.example.SalesForecast.domain.sales.repository.SalesRepository;
 import com.example.SalesForecast.domain.weather.entity.Weather;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,9 +20,7 @@ public class SalesService {
         this.salesRepository = salesRepository;
     }
 
-    /**
-     * サーバーサイド絞り込み＋画面用Map組立
-     */
+    // 選択した条件で絞り込み
     public List<Map<String, Object>> getFilteredSalesWeatherRecords(
             Integer year,
             Integer month,
@@ -145,9 +146,7 @@ public class SalesService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * 画面表示用 Map 組み立て(DTO!)
-     */
+    // 画面表示用 Map 組み立て
     private Map<String, Object> toMap(Sales sale) {
         Map<String, Object> record = new HashMap<>();
         record.put("salesDate", sale.getSalesDate());
@@ -159,7 +158,6 @@ public class SalesService {
                 .map(Double::intValue)
                 .orElse(0);
         int totalSales = price * sale.getQuantity();
-
         // カンマ区切りの文字列を作成
         String formattedTotalSales = String.format("%,d", totalSales);
         record.put("totalSales", formattedTotalSales);
@@ -190,4 +188,27 @@ public class SalesService {
         return Arrays.stream(new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 })
                 .collect(Collectors.toList());
     }
+
+    public List<BeerInfoDto> getBeerInfoByDate(
+            LocalDate date, List<Product> allProducts) {
+
+        List<Sales> salesList = salesRepository.findBySalesDate(date);
+
+        Map<Integer, Integer> qtyByProductId = salesList.stream()
+                .collect(Collectors.toMap(
+                        s -> s.getProduct().getId(),
+                        Sales::getQuantity,
+                        Integer::sum));
+
+        return allProducts.stream()
+                // ── ここで filter を追加 ──
+                .filter(p -> qtyByProductId.getOrDefault(p.getId(), 0) > 0)
+                .map(p -> new BeerInfoDto(
+                        p.getName(),
+                        qtyByProductId.getOrDefault(p.getId(), 0),
+                        p.getPrice().intValue(),
+                        p.getJanCode()))
+                .collect(Collectors.toList());
+    }
+
 }
