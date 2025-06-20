@@ -95,3 +95,55 @@
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 50%;
 }
+
+
+.days li.disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.days li.clickable {
+  cursor: pointer;
+}
+
+.days li.clickable:hover {
+  background-color: #c8f2ec;
+  border-radius: 50%;
+}
+
+
+/* admin-record.css */
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.product-table th,
+.product-table td {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+/* colgroup を使うなら以下の nth-child は不要ですが、
+   両方併用しても動きます */
+.product-table th:nth-child(1),
+.product-table td:nth-child(1) {
+  width: 40%;
+}
+
+.product-table th:nth-child(2),
+.product-table td:nth-child(2) {
+  width: 15%;
+}
+
+.product-table th:nth-child(3),
+.product-table td:nth-child(3) {
+  width: 25%;
+}
+
+.product-table th:nth-child(4),
+.product-table td:nth-child(4) {
+  width: 20%;
+}

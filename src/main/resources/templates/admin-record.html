@@ -5,9 +5,9 @@
   <meta charset="UTF-8">
   <title>販売実績入力</title>
   <link rel="stylesheet" th:href="@{/css/admin-record.css}">
-<!--   <link rel="stylesheet" href="../static/css/admin-record.css"> -->
+  <!-- <link rel="stylesheet" href="../static/css/admin-record.css"> -->
   <script th:src="@{/js/admin-record.js}" defer></script>
-<!--   <script src="../static/js/admin-record.js" defer></script> -->
+  <!-- <script src="../static/js/admin-record.js" defer></script> -->
 
 </head>
 
@@ -39,6 +39,13 @@
       </div>
     </div>
 
+    <!-- ページ先頭に追加 -->
+    <form id="dateForm" th:action="@{/record}" method="get">
+      <input type="hidden" name="year" id="yearInput" th:value="${selectedYear}">
+      <input type="hidden" name="month" id="monthInput" th:value="${selectedMonth}">
+      <input type="hidden" name="day" id="dayInput" th:value="${selectedDay}">
+    </form>
+
 
     <!-- 🔹 日付選択 -->
     <section class="calendar-section">
@@ -66,6 +73,34 @@
     </section>
 
 
+
+    <template id="new-row-template">
+      <tr>
+        <!-- 銘柄プルダウン -->
+        <td>
+          <select name="productId" required>
+            <option value="" disabled selected>選択してください</option>
+            <option th:each="prod : ${availableProducts}" th:value="${prod.id}" th:text="${prod.name}"
+              th:attr="data-price=${prod.price.intValue()},data-jan-code=${prod.janCode}">
+            </option>
+          </select>
+        </td>
+        <!-- 販売数 -->
+        <td>
+          <input type="number" name="quantity" value="" min="1" required>
+        </td>
+        <!-- 値段 -->
+        <td>
+          <input type="text" name="price" value="" readonly>
+        </td>
+        <!-- JANコード -->
+        <td>
+          <input type="text" name="janCode" value="" readonly>
+        </td>
+      </tr>
+    </template>
+
+
     <!-- 🔹 商品情報 -->
     <section class="product-section">
       <h2>商品情報</h2>
@@ -74,19 +109,19 @@
           <tr>
             <th>銘柄</th>
             <th>販売数</th>
-            <th>値段（円）</th>
+            <th>値段（円/本）</th>
             <th>JANコード</th>
           </tr>
         </thead>
 
         <tbody>
           <tr th:each="beer : ${beer_info_list}">
-            <td th:text="${beer.beer_name}">商品名</td>
+            <td th:text="${beer.beer_name}"></td>
             <td>
-              <input type="number" name="quantity" value="1" />
+              <input type="number" name="quantity" th:value="${beer.quantity}" disabled />
             </td>
-            <td th:text="${beer.price}">価格</td>
-            <td th:text="${beer.jan_code}">JANコード</td>
+            <td th:text="${beer.price}"></td>
+            <td th:text="${beer.jan_code}"></td>
           </tr>
         </tbody>
 
