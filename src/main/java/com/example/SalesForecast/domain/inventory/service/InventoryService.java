@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 public class InventoryService {
 
@@ -72,34 +71,57 @@ public class InventoryService {
         }
         inventoryRepository.save(inventory);
     }
-    
+
     public void updateTodayInventory(Integer productId, Integer newQuantity) {
-    // 今日の日付を取得
-    LocalDate today = LocalDate.now();
+        // 今日の日付を取得
+        LocalDate today = LocalDate.now();
 
-    // 今日の入荷データ（ProductReceipt）を取得
-    Optional<ProductReceipt> optionalReceipt = productReceiptRepository
-        .findByProductIdAndReceivedDate(productId, today);
+        // 今日の入荷データ（ProductReceipt）を取得
+        Optional<ProductReceipt> optionalReceipt = productReceiptRepository
+                .findByProductIdAndReceivedDate(productId, today);
 
-    if (optionalReceipt.isPresent()) {
-        ProductReceipt receipt = optionalReceipt.get();
+        if (optionalReceipt.isPresent()) {
+            ProductReceipt receipt = optionalReceipt.get();
 
-        // 在庫の増減を反映させるために、変更前の数量を保持
-        int oldQuantity = receipt.getQuantity();
-        int delta = newQuantity - oldQuantity;
+            // 在庫の増減を反映させるために、変更前の数量を保持
+            int oldQuantity = receipt.getQuantity();
+            int delta = newQuantity - oldQuantity;
 
-        // 入荷データを更新
-        receipt.setQuantity(newQuantity);
-        receipt.setEditedDate(LocalDateTime.now());
-        productReceiptRepository.save(receipt);
+            // 入荷データを更新
+            receipt.setQuantity(newQuantity);
+            receipt.setEditedDate(LocalDateTime.now());
+            productReceiptRepository.save(receipt);
 
-        // 在庫データを更新
-        Inventory inventory = inventoryRepository.findByProductId(productId);
-        inventory.setStockQuantity(inventory.getStockQuantity() + delta);
-        inventory.setUpdatedDate(LocalDateTime.now());
-        inventoryRepository.save(inventory);
+            // 在庫データを更新
+            Inventory inventory = inventoryRepository.findByProductId(productId);
+            inventory.setStockQuantity(inventory.getStockQuantity() + delta);
+            inventory.setUpdatedDate(LocalDateTime.now());
+            inventoryRepository.save(inventory);
+        }
     }
-}
+
+    public void deductStock(Integer productId, Integer qty) {
+        Inventory inv = inventoryRepository.findByProductId(productId);
+        if (inv.getStockQuantity() < qty) {
+            throw new IllegalStateException("在庫不足です: productId=" + productId);
+        }
+        inv.setStockQuantity(inv.getStockQuantity() - qty);
+        inv.setUpdatedDate(LocalDateTime.now());
+        inventoryRepository.save(inv);
+    }
+
+    public void addStock(Integer productId, Integer qty) {
+        Inventory inv = inventoryRepository.findByProductId(productId);
+        if (inv == null) {
+            // もともと在庫レコードがなければ新規作成
+            inv = new Inventory(productId, qty, LocalDateTime.now());
+        } else {
+            inv.setStockQuantity(inv.getStockQuantity() + qty);
+            inv.setUpdatedDate(LocalDateTime.now());
+        }
+        inventoryRepository.save(inv);
+    }
+
         // 商品登録時に初期在庫0件を自動追加（履歴は残す）
         public void addInitialInventory(Product product) {
 
@@ -123,6 +145,5 @@ public class InventoryService {
             }
             inventoryRepository.save(inventory);
         }
-
 
 }

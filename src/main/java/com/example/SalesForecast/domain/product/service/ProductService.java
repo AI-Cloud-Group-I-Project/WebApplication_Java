@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @Service
@@ -62,6 +63,11 @@ public class ProductService {
     // 状態ごとの商品取得
     public List<Product> getProductsByStatusId(int statusId) {
         return productRepository.findAllByStatus_Id(statusId);
+    }
+
+    public Product getById(Integer id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Product not found: " + id));
     }
 
     public List<Product> getAvailableProducts() {

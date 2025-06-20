@@ -45,4 +45,20 @@ public class Weather {
     public String getWeatherCondition() {
         return weatherCondition;
     }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setAverageTemperature(Float averageTemperature) {
+        this.averageTemperature = averageTemperature;
+    }
+
+    public void setPrecipitation(Float precipitation) {
+        this.precipitation = precipitation;
+    }
+
+    public void setWeatherCondition(String weatherCondition) {
+        this.weatherCondition = weatherCondition;
+    }
 }

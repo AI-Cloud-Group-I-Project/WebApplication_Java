@@ -39,12 +39,12 @@
 
     <section class="product-section">
       <div class="section-header">
-      <h2>商品管理</h2>
-      <label class="filter-toggle">
-        <input type="checkbox" id="showAvailableOnly" onchange="toggleFilter()">
-        販売中のみ表示
-      </label>
-    </div>
+        <h2>商品管理</h2>
+        <label class="filter-toggle">
+          <input type="checkbox" id="showAvailableOnly" onchange="toggleFilter()">
+          販売中のみ表示
+        </label>
+      </div>
 
 
       <table class="product-table">
@@ -77,11 +77,11 @@
             <form th:action="@{/products/update}" method="post">
               <input type="hidden" name="id" th:value="${product.id}" />
               <input type="hidden" name="status.id" value="1" />
-              <td><input type="text" name="name" th:value="${product.name}" disabled /></td>
-              <td><input type="number" name="price" th:value="${product.price}" disabled /></td>
-              <td><input type="text" name="janCode" th:value="${product.janCode}" disabled /></td>
-              <td th:attr="data-status=${product.status.id}" 
-                  th:text="${product.status.id == 1 ? 'On Sale' : 'Sale Ended'}">
+              <td><input type="text" name="name" th:value="${product.name}" disabled required /></td>
+              <td><input type="number" name="price" th:value="${product.price}" disabled required /></td>
+              <td><input type="text" name="janCode" th:value="${product.janCode}" disabled required /></td>
+              <td th:attr="data-status=${product.status.id}"
+                th:text="${product.status.id == 1 ? 'On Sale' : 'Sale Ended'}">
               </td>
 
 
@@ -103,25 +103,21 @@
       </div>
 
       <section class="pagination">
-        
-        <a th:href="@{/products(page=${currentPage - 1})}"
-        th:classappend="${currentPage == 0} ? ' disabled' : ''"
-        class="page-btn arrow"
-        th:if="${totalPages > 1}">&laquo;</a>
 
-        
+        <a th:href="@{/products(page=${currentPage - 1})}" th:classappend="${currentPage == 0} ? ' disabled' : ''"
+          class="page-btn arrow" th:if="${totalPages > 1}">&laquo;</a>
+
+
         <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-        <a th:href="@{/products(page=${i})}"
-          th:text="${i + 1}"
-          th:class="'page-btn' + (${i} == ${currentPage} ? ' active' : '')">
-        </a>
+          <a th:href="@{/products(page=${i})}" th:text="${i + 1}"
+            th:class="'page-btn' + (${i} == ${currentPage} ? ' active' : '')">
+          </a>
         </span>
 
-        
+
         <a th:href="@{/products(page=${currentPage + 1})}"
-        th:classappend="${currentPage + 1 >= totalPages} ? ' disabled' : ''"
-        class="page-btn arrow"
-        th:if="${totalPages > 1}">&raquo;</a>
+          th:classappend="${currentPage + 1 >= totalPages} ? ' disabled' : ''" class="page-btn arrow"
+          th:if="${totalPages > 1}">&raquo;</a>
       </section>
 
     </section>
@@ -132,7 +128,7 @@
         method: 'POST'
       }).then(response => {
         if (response.ok) {
-          location.reload(); 
+          location.reload();
         } else {
           alert("販売状態の変更に失敗しました");
         }

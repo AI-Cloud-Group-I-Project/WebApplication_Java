@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderCalendar() {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);  // 時刻を切り捨て
 
         monthYearEl.innerHTML = `
       ${monthNames[month]}<br>
@@ -49,26 +51,30 @@ document.addEventListener('DOMContentLoaded', () => {
             const li = document.createElement('li');
             li.textContent = d;
 
-            // 選択済み日をアクティブ化
+            const thisDate = new Date(year, month, d);
+            // 選択済み日のハイライト（既存ロジック）
             if (selectedDay === d &&
                 year === parseInt(yVal) &&
                 month + 1 === parseInt(mVal)) {
                 li.classList.add('active');
             }
 
-            // クリックで再送＆選択反映
-            li.addEventListener('click', () => {
-                // カレンダー上のハイライト切り替え
-                daysContainer.querySelectorAll('li')
-                    .forEach(x => x.classList.remove('active'));
-                li.classList.add('active');
+            // 今日より未来なら disabled クラスだけ付与
+            if (thisDate > today) {
+                li.classList.add('disabled');
+            } else {
+                // 未来日でなければクリックで日付切替
+                li.addEventListener('click', () => {
+                    daysContainer.querySelectorAll('li')
+                        .forEach(x => x.classList.remove('active'));
+                    li.classList.add('active');
 
-                // hidden input にセットして submit
-                document.getElementById('yearInput').value = year;
-                document.getElementById('monthInput').value = month + 1;
-                document.getElementById('dayInput').value = d;
-                document.getElementById('dateForm').submit();
-            });
+                    document.getElementById('yearInput').value = year;
+                    document.getElementById('monthInput').value = month + 1;
+                    document.getElementById('dayInput').value = d;
+                    document.getElementById('dateForm').submit();
+                });
+            }
 
             daysContainer.appendChild(li);
         }
@@ -118,14 +124,22 @@ document.addEventListener('DOMContentLoaded', () => {
         enableEditMode();
     });
 
-    // プルダウン変更時に価格/JANを流し込む
+
+    // // --- Submit ボタンの処理 ---
+    const form = document.getElementById('recordForm');
+    form.addEventListener('submit', () => {
+        // 送信はもう始まっているので、disabled を外してもOK
+        form.querySelectorAll('[disabled]').forEach(el => el.disabled = false);
+    });
+
+
+    // プルダウン変更時に価格/JANを連動
     tbody.addEventListener('change', e => {
         if (!e.target.matches('select[name="productId"]')) return;
 
         const opt = e.target.selectedOptions[0];
         const row = e.target.closest('tr');
 
-        // dataset から読み出して input にセット
         row.querySelector('input[name="price"]').value = opt.dataset.price || '';
         row.querySelector('input[name="janCode"]').value = opt.dataset.janCode || '';
     });

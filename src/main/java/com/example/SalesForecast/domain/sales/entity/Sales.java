@@ -72,4 +72,32 @@ public class Sales {
     public LocalDate getEditedDate() {
         return editedDate;
     }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setWeather(Weather weather) {
+        this.weather = weather;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setSalesDate(LocalDate salesDate) {
+        this.salesDate = salesDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public void setEditedDate(LocalDate editedDate) {
+        this.editedDate = editedDate;
+    }
 }

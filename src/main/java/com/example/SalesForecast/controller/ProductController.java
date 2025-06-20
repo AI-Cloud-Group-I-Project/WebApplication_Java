@@ -29,10 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
 import java.util.Optional;
-
-import java.util.List;
 
 @Controller
 public class ProductController {
@@ -43,8 +40,6 @@ public class ProductController {
     private ProductRepository productRepository;
     @Autowired
     private ProductStatusRepository productStatusRepository;
-
-
 
     @GetMapping("/products")
     public String getProducts(
@@ -60,13 +55,11 @@ public class ProductController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productPage.getTotalPages());
 
-        
         model.addAttribute("current_username", session.getAttribute("username"));
         model.addAttribute("current_email", session.getAttribute("email"));
 
         return "admin-product-management";
     }
-
 
     @PostMapping("/products/update")
     public String updateProduct(@ModelAttribute Product updatedProduct) {
@@ -94,42 +87,70 @@ public class ProductController {
         return "redirect:/products";
     }
 
-   @PostMapping("/products/toggleStatus/{id}")
+      @PostMapping("/products/toggleStatus/{id}")
     public ResponseEntity<Void> toggleStatus(@PathVariable Integer id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
 
+            ProductStatus currentStatus = product.getStatus();
+            ProductStatus newStatus = new ProductStatus();
 
-            int currentStatusId = product.getStatus().getId();
-            int newStatusId;
-
-
-            if (currentStatusId == 1) {
-                newStatusId = 2; // 「販売終了」
+            if (currentStatus.getId() == 1) {
+                newStatus.setId(2); // 「販売終了」
             } else {
-                newStatusId = 1; // 「販売中」
+                newStatus.setId(1); // 「販売中」
             }
-
-
-            // データベースから新しいステータスを取得
-            ProductStatus newStatus = productStatusRepository
-                .findById(newStatusId)
-                .orElseThrow(() -> new IllegalStateException("ステータスが見つかりません"));
-
 
             product.setStatus(newStatus);
             productRepository.save(product);
-
 
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+  
+//    @PostMapping("/products/toggleStatus/{id}")
+//     public ResponseEntity<Void> toggleStatus(@PathVariable Integer id) {
+//         Optional<Product> optionalProduct = productRepository.findById(id);
+//         if (optionalProduct.isPresent()) {
+//             Product product = optionalProduct.get();
+
+// <<<<<<< kobayashi
+//             ProductStatus currentStatus = product.getStatus();
+//             ProductStatus newStatus = new ProductStatus();
+
+//             if (currentStatus.getId() == 1) {
+//                 newStatus.setId(2); // 「販売終了」
+// =======
+
+//             int currentStatusId = product.getStatus().getId();
+//             int newStatusId;
 
 
+//             if (currentStatusId == 1) {
+//                 newStatusId = 2; // 「販売終了」
+// >>>>>>> main
+//             } else {
+//                 newStatusId = 1; // 「販売中」
+//             }
 
 
+//             // データベースから新しいステータスを取得
+//             ProductStatus newStatus = productStatusRepository
+//                 .findById(newStatusId)
+//                 .orElseThrow(() -> new IllegalStateException("ステータスが見つかりません"));
+
+
+//             product.setStatus(newStatus);
+//             productRepository.save(product);
+
+
+//             return ResponseEntity.ok().build();
+//         } else {
+//             return ResponseEntity.notFound().build();
+//         }
+//     }
 
 }
