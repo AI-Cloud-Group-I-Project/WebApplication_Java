@@ -11,9 +11,9 @@ import java.util.Optional;
 @Repository
 public interface ProductReceiptRepository extends JpaRepository<ProductReceipt, Integer> {
 
+    boolean existsByProductIdAndReceivedDate(Integer productId, LocalDate receivedDate);
     
     Optional<ProductReceipt> findByProductIdAndReceivedDate(Integer productId, LocalDate receivedDate);
 
-    
     List<ProductReceipt> findByReceivedDate(LocalDate receivedDate);
 }

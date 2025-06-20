@@ -35,6 +35,13 @@
     <div class="section-container">
       <h2>商品入荷入力（<span th:text="${T(java.time.LocalDate).now()}"></span>）</h2>
 
+      <div th:if="${param.error != null and param.error[0] == 'alreadyExists'}" 
+          style="color: red; font-weight: bold; margin-bottom: 10px;">
+        その商品の入荷情報は本日すでに入力されています。変更がある場合は、「本日入力された入荷情報（編集可能）」から変更してください。
+      </div>
+
+
+
       <form class="stock-form" th:action="@{/inventories/add}" method="post" id="inventoryForm">
         <div id="input-container">
           <div class="form-grid">
