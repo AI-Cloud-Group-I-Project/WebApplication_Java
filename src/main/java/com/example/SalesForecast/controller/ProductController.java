@@ -11,6 +11,7 @@ package com.example.SalesForecast.controller;
 import com.example.SalesForecast.domain.product.entity.Product;
 import com.example.SalesForecast.domain.product.entity.ProductStatus;
 import com.example.SalesForecast.domain.product.repository.ProductRepository;
+import com.example.SalesForecast.domain.product.repository.ProductStatusRepository;
 import com.example.SalesForecast.domain.product.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
@@ -40,6 +41,8 @@ public class ProductController {
     private ProductService productService;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductStatusRepository productStatusRepository;
 
 
 
@@ -78,42 +81,53 @@ public class ProductController {
 
     @PostMapping("/products/add")
     public String addProduct(@ModelAttribute Product product) {
-        // ステータスがnullなら "available" を仮設定
+        // ステータスがnullなら DBから取得して設定
         if (product.getStatus() == null) {
-            ProductStatus defaultStatus = new ProductStatus();
-            defaultStatus.setId(1); // 'available' の ID
+            ProductStatus defaultStatus = productStatusRepository
+                .findById(1)
+                .orElseThrow(() -> new IllegalStateException("Default status not found"));
             product.setStatus(defaultStatus);
         }
+
 
         productService.addProduct(product);
         return "redirect:/products";
     }
 
-    @PostMapping("/products/toggleStatus/{id}")
+   @PostMapping("/products/toggleStatus/{id}")
     public ResponseEntity<Void> toggleStatus(@PathVariable Integer id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
 
-            
-            ProductStatus currentStatus = product.getStatus();
-            ProductStatus newStatus = new ProductStatus();
 
-            
-            if (currentStatus.getId() == 1) {
-                newStatus.setId(2); // 「販売終了」
+            int currentStatusId = product.getStatus().getId();
+            int newStatusId;
+
+
+            if (currentStatusId == 1) {
+                newStatusId = 2; // 「販売終了」
             } else {
-                newStatus.setId(1); // 「販売中」
+                newStatusId = 1; // 「販売中」
             }
+
+
+            // データベースから新しいステータスを取得
+            ProductStatus newStatus = productStatusRepository
+                .findById(newStatusId)
+                .orElseThrow(() -> new IllegalStateException("ステータスが見つかりません"));
+
 
             product.setStatus(newStatus);
             productRepository.save(product);
+
 
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
 
 
