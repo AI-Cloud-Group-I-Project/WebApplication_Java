@@ -78,17 +78,18 @@
 
                   <!-- ✅ ステータス選択欄 -->
                   <td style="width: 10%;">
-                    <select name="status" disabled class="display-status">
-                      <option value="1" th:selected="${user.status == 1}">在職中</option>
-                      <option value="0" th:selected="${user.status == 0}">退職済み</option>
-                    </select>
+                  <select name="status" disabled class="display-status">
+                    <option value="active" th:selected="${user.status == 'active'}">在職中</option>
+                    <option value="retired" th:selected="${user.status == 'retired'}">退職済み</option>
+                  </select>
                   </td>
-                 <td style="width: 35%;">
-                  <input type="hidden" name="id" th:value="${user.id}" />
-                  <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
-                  <button class="btn submit" type="submit" name="action" value="submit" disabled>Submit</button>
-                  <button class="btn reset" type="submit" name="action" value="reset">Password Reset</button>
-                 </td>
+
+                  <td style="width: 35%;">
+                    <input type="hidden" name="id" th:value="${user.id}" />
+                    <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
+                    <button class="btn submit" type="submit" name="action" value="submit" disabled>Submit</button>
+                    <button class="btn reset" type="submit" name="action" value="reset">Password Reset</button>
+                  </td>
 
                 </tr>
               </table>
@@ -103,6 +104,17 @@
       </div>
     </section>
   </main>
+  <script>
+    function enableEdit(button) {
+      const form = button.closest("form");
+      const inputs = form.querySelectorAll("input, select");
+      inputs.forEach(el => el.disabled = false);
+
+
+      const submitBtn = form.querySelector(".submit");
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  </script>
 
 </body>
 

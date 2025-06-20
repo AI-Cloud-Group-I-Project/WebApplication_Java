@@ -35,12 +35,13 @@ public class UserController {
             @RequestParam String name,
             @RequestParam String email,
             @RequestParam("role.id") Integer roleId,
+            @RequestParam String status,
             @RequestParam String action) {
 
         if (id != null) {
-            userService.updateUserInfo(id, name, email, roleId);
+            userService.updateUserInfo(id, name, email, roleId, status);
         } else {
-            userService.createUserWithCredential(name, email, roleId);
+            userService.createUserWithCredential(name, email, roleId, status);
         }
 
         return "redirect:/users";
