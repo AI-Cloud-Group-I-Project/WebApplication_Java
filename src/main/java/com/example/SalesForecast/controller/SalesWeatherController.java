@@ -3,10 +3,17 @@ package com.example.SalesForecast.controller;
 import com.example.SalesForecast.domain.sales.service.SalesService;
 import com.example.SalesForecast.service.FilterOptionService;
 import jakarta.servlet.http.HttpSession;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.Map;
 
 @Controller
 public class SalesWeatherController {
@@ -31,6 +38,9 @@ public class SalesWeatherController {
             @RequestParam(required = false) String sales,
             @RequestParam(required = false) String rain,
             @RequestParam(required = false) String temp,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "salesDate,asc") String sort,
             Model model,
             HttpSession session) {
         // ログイン情報
@@ -43,12 +53,39 @@ public class SalesWeatherController {
         model.addAttribute("weatherOptions", filterOptionService.getAllWeatherConditions());
         model.addAttribute("brandOptions", filterOptionService.getAllProductNames());
 
-        // 絞り込み結果
-        model.addAttribute("salesWeatherList",
-                salesService.getFilteredSalesWeatherRecords(
-                        year, month, weather, brand, volume, sales, rain, temp));
+        // ── ソート文字列 (field,dir) を分解 ──
+        String[] parts = sort.split(",");
+        String sortField = parts[0];
+        String sortDir = parts.length > 1 ? parts[1] : "asc";
 
-        // 再選択状態保持
+        Sort sd = Sort.by(sortField);
+        sd = "asc".equalsIgnoreCase(sortDir) ? sd.ascending() : sd.descending();
+
+        // ── ページング＋ソートで取得 ──
+        Pageable pageable = PageRequest.of(page, size, sd);
+        Page<Map<String, Object>> pageData = salesService
+                .getFilteredSalesWeatherRecords(
+                        year, month, weather, brand, volume, sales, rain, temp,
+                        pageable);
+
+        // ── ページャー用計算 ──
+        int totalPages = pageData.getTotalPages();
+        int current = pageData.getNumber();
+        int startPage = Math.max(0, current - 5);
+        int endPage = Math.min(totalPages - 1, current + 5);
+
+        // ── モデル登録 ──
+        model.addAttribute("salesWeatherList", pageData.getContent());
+        model.addAttribute("currentPage", current);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        // ── ソート状態保持 ──
+        model.addAttribute("currentSort", sort);
+
+        // ── フィルタ再選択状態保持 ──
         model.addAttribute("selectedYear", year);
         model.addAttribute("selectedMonth", month);
         model.addAttribute("selectedWeather", weather);

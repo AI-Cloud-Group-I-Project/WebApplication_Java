@@ -111,6 +111,35 @@
   background-color: #fefefe;
 }
 
+
+th a {
+  position: relative;
+  padding-right: 16px;
+}
+
+th a .sort-asc::after,
+th a .sort-desc::after {
+  content: '';
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+}
+
+th a .sort-asc::after {
+  border-bottom-color: currentColor;
+  margin-top: -2px;
+}
+
+th a .sort-desc::after {
+  border-top-color: currentColor;
+  margin-top: -8px;
+}
+
+
+
 /* -------- レスポンシブ -------- */
 @media (max-width: 768px) {
   .filter-row {
