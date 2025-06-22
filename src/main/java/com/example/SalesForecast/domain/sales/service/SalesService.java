@@ -14,7 +14,11 @@ import com.example.SalesForecast.domain.weather.service.WeatherService;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -42,7 +46,7 @@ public class SalesService {
     }
 
     // 選択した条件で絞り込み
-    public List<Map<String, Object>> getFilteredSalesWeatherRecords(
+    public List<Map<String, Object>> fetchFilteredRecords(
             Integer year,
             Integer month,
             String weatherCondition,
@@ -167,6 +171,56 @@ public class SalesService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * ページング＋ソート対応版
+     */
+    public Page<Map<String, Object>> getFilteredSalesWeatherRecords(
+            Integer year, Integer month,
+            String weatherCondition, String brandName,
+            String volumeRange, String salesRange,
+            String rainRange, String tempRange,
+            Pageable pageable) {
+
+        // 1) フィルタ＋DTO化
+        List<Map<String, Object>> all = fetchFilteredRecords(
+                year, month, weatherCondition,
+                brandName, volumeRange, salesRange,
+                rainRange, tempRange);
+
+        // 2) ソート指定があれば in‐memory でソート
+        if (pageable.getSort().isSorted()) {
+            Sort.Order order = pageable.getSort().iterator().next();
+            String field = order.getProperty();
+            boolean asc = order.isAscending();
+
+            all.sort((m1, m2) -> {
+                Object o1 = m1.get(field);
+                Object o2 = m2.get(field);
+                if (o1 == null && o2 == null)
+                    return 0;
+                if (o1 == null)
+                    return 1;
+                if (o2 == null)
+                    return -1;
+                // 明示的に unchecked キャストして Comparable とみなす
+                @SuppressWarnings("unchecked")
+                Comparable<Object> c1 = (Comparable<Object>) o1;
+                @SuppressWarnings("unchecked")
+                Comparable<Object> c2 = (Comparable<Object>) o2;
+                return asc
+                        ? c1.compareTo(c2)
+                        : c2.compareTo(c1);
+            });
+        }
+
+        // 3) PageImpl でスライス
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), all.size());
+        List<Map<String, Object>> content = start > end ? Collections.emptyList() : all.subList(start, end);
+
+        return new PageImpl<>(content, pageable, all.size());
+    }
+
     // 画面表示用 Map 組み立て
     private Map<String, Object> toMap(Sales sale) {
         Map<String, Object> record = new HashMap<>();
@@ -179,9 +233,9 @@ public class SalesService {
                 .map(Double::intValue)
                 .orElse(0);
         int totalSales = price * sale.getQuantity();
-        // カンマ区切りの文字列を作成
+        record.put("totalSales", totalSales);
         String formattedTotalSales = String.format("%,d", totalSales);
-        record.put("totalSales", formattedTotalSales);
+        record.put("totalSalesFormatted", formattedTotalSales);
 
         Weather weatherEntity = sale.getWeather();
         record.put("weather", weatherEntity.getWeatherCondition());

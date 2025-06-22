@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,10 +27,6 @@ public class UserService {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.loginCredentialRepository = loginCredentialRepository;
-    }
-
-    public List<User> getAllUsers() {
-        return userRepository.findAllByOrderByCreatedDateDesc();
     }
 
     public Optional<User> getUserById(Integer id) {
@@ -86,7 +80,7 @@ public class UserService {
     }
 
     public Page<User> getUsersByPage(Pageable pageable) {
-        return userRepository.findAll(pageable);
+        return userRepository.findAllByOrderByCreatedDateDesc(pageable);
     }
 
 }

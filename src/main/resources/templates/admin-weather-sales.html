@@ -7,6 +7,7 @@
   <link rel="stylesheet" th:href="@{/css/admin-weather-sales.css}">
   <!-- <link rel="stylesheet" href="../static/css/admin-weather-sales.css"> -->
   <script th:src="@{/js/admin-weather-sales.js}" defer></script>
+  <!-- <script src="../static/js/admin-weather-sales.js" defer></script> -->
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -37,6 +38,7 @@
       </div>
     </div>
 
+    <!-- フィルタ＋ソート -->
     <section class="filter-section">
       <form method="get" action="/sales-weather">
         <div class="filter-row">
@@ -81,73 +83,100 @@
             </select>
           </div>
 
-          <!-- 本数 -->
+          <!-- 本数（本） -->
           <div class="filter-item">
             <label>本数（本）</label>
             <select name="volume" id="volume-select">
               <option value="">すべて</option>
-              <option th:value="1～5" th:selected="${selectedVolume == '1～5'}">1～5</option>
-              <option th:value="6～10" th:selected="${selectedVolume == '6～10'}">6～10</option>
-              <option th:value="11～15" th:selected="${selectedVolume == '11～15'}">11～15</option>
-              <option th:value="16～20" th:selected="${selectedVolume == '16～20'}">16～20</option>
-              <option th:value="21～30" th:selected="${selectedVolume == '21～30'}">21～30</option>
-              <option th:value="31～40" th:selected="${selectedVolume == '31～40'}">31～40</option>
-              <option th:value="41～50" th:selected="${selectedVolume == '41～50'}">41～50</option>
-              <option th:value="50以上" th:selected="${selectedVolume == '50以上'}">51以上</option>
+              <option th:value="1～5" th:selected="${selectedVolume=='1～5'}">1～5</option>
+              <option th:value="6～10" th:selected="${selectedVolume=='6～10'}">6～10</option>
+              <option th:value="11～15" th:selected="${selectedVolume=='11～15'}">11～15</option>
+              <option th:value="16～20" th:selected="${selectedVolume=='16～20'}">16～20</option>
+              <option th:value="21～30" th:selected="${selectedVolume=='21～30'}">21～30</option>
+              <option th:value="31～40" th:selected="${selectedVolume=='31～40'}">31～40</option>
+              <option th:value="41～50" th:selected="${selectedVolume=='41～50'}">41～50</option>
+              <option th:value="50以上" th:selected="${selectedVolume=='50以上'}">50以上</option>
             </select>
           </div>
 
-          <!-- 売上 -->
+          <!-- 売上（円） -->
           <div class="filter-item">
             <label>売上（円）</label>
             <select name="sales" id="sales-select">
               <option value="">すべて</option>
-              <option th:value="1～2000" th:selected="${selectedSales == '1～2000'}">1～2,000</option>
-              <option th:value="2001～4000" th:selected="${selectedSales == '2001～4000'}">2,001～4,000</option>
-              <option th:value="4001～6000" th:selected="${selectedSales == '4001～6000'}">4,001～6,000</option>
-              <option th:value="6001～8000" th:selected="${selectedSales == '6001～8000'}">6,001～8,000</option>
-              <option th:value="8001～10000" th:selected="${selectedSales == '8001～10000'}">8,001～10,000</option>
-              <option th:value="10001～12000" th:selected="${selectedSales == '10001～12000'}">10,001～12,000</option>
-              <option th:value="12001～14000" th:selected="${selectedSales == '12001～14000'}">12,001～14,000</option>
-              <option th:value="14001～16000" th:selected="${selectedSales == '14001～16000'}">14,001～16,000</option>
-              <option th:value="16001～18000" th:selected="${selectedSales == '16001～18000'}">16,001～18,000</option>
-              <option th:value="18001～20000" th:selected="${selectedSales == '18001～20000'}">18,001～19,999</option>
-              <option th:value="20000以上" th:selected="${selectedSales == '20000以上'}">20,000以上</option>
+              <option th:value="1～2000" th:selected="${selectedSales=='1～2000'}">1～2,000</option>
+              <option th:value="2001～4000" th:selected="${selectedSales=='2001～4000'}">2,001～4,000</option>
+              <option th:value="4001～6000" th:selected="${selectedSales=='4001～6000'}">4,001～6,000</option>
+              <option th:value="6001～8000" th:selected="${selectedSales=='6001～8000'}">6,001～8,000</option>
+              <option th:value="8001～10000" th:selected="${selectedSales=='8001～10000'}">8,001～10,000</option>
+              <option th:value="10001～12000" th:selected="${selectedSales=='10001～12000'}">10,001～12,000</option>
+              <option th:value="12001～14000" th:selected="${selectedSales=='12001～14000'}">12,001～14,000</option>
+              <option th:value="14001～16000" th:selected="${selectedSales=='14001～16000'}">14,001～16,000</option>
+              <option th:value="16001～18000" th:selected="${selectedSales=='16001～18000'}">16,001～18,000</option>
+              <option th:value="18001～20000" th:selected="${selectedSales=='18001～20000'}">18,001～20,000</option>
+              <option th:value="20000以上" th:selected="${selectedSales=='20000以上'}">20,000以上</option>
             </select>
           </div>
 
-          <!-- 降水量 -->
+          <!-- 降水量（mm/日） -->
           <div class="filter-item">
             <label>降水量（mm/日）</label>
             <select name="rain" id="rain-select">
               <option value="">すべて</option>
-              <option th:value="0.1未満" th:selected="${selectedRain == '0.1未満'}">0.1未満</option>
-              <option th:value="0.1～1" th:selected="${selectedRain == '0.1～1'}">0.1～1.0</option>
-              <option th:value="1.1～5" th:selected="${selectedRain == '1.1～5'}">1.1～5.0</option>
-              <option th:value="5.1～10" th:selected="${selectedRain == '5.1～10'}">5.1～10.0</option>
-              <option th:value="10.1～30" th:selected="${selectedRain == '10.1～30'}">10.1～30.0</option>
-              <option th:value="30.1～50" th:selected="${selectedRain == '30.1～50'}">30.1～50.0</option>
-              <option th:value="50.1～100" th:selected="${selectedRain == '50.1～100'}">50.1～99.9</option>
-              <option th:value="100以上" th:selected="${selectedRain == '100以上'}">100.0以上</option>
+              <option th:value="0.1未満" th:selected="${selectedRain=='0.1未満'}">0.1未満</option>
+              <option th:value="0.1～1" th:selected="${selectedRain=='0.1～1'}">0.1～1.0</option>
+              <option th:value="1.1～5" th:selected="${selectedRain=='1.1～5'}">1.1～5.0</option>
+              <option th:value="5.1～10" th:selected="${selectedRain=='5.1～10'}">5.1～10.0</option>
+              <option th:value="10.1～30" th:selected="${selectedRain=='10.1～30'}">10.1～30.0</option>
+              <option th:value="30.1～50" th:selected="${selectedRain=='30.1～50'}">30.1～50.0</option>
+              <option th:value="50.1～100" th:selected="${selectedRain=='50.1～100'}">50.1～100.0</option>
+              <option th:value="100以上" th:selected="${selectedRain=='100以上'}">100以上</option>
             </select>
           </div>
 
-          <!-- 気温 -->
+          <!-- 平均気温（℃） -->
           <div class="filter-item">
             <label>平均気温（℃）</label>
             <select name="temp" id="temp-select">
               <option value="">すべて</option>
-              <option th:value="-11以下" th:selected="${selectedTemp == '-11以下'}">-10.0未満</option>
-              <option th:value="-10～-6" th:selected="${selectedTemp == '-10～-6'}">-10.0～-6.0</option>
-              <option th:value="-5～0" th:selected="${selectedTemp == '-5～0'}">-5.0～0.0</option>
-              <option th:value="1～5" th:selected="${selectedTemp == '1～5'}">1.0～5.0</option>
-              <option th:value="6～10" th:selected="${selectedTemp == '6～10'}">6.0～10.0</option>
-              <option th:value="11～15" th:selected="${selectedTemp == '11～15'}">11.0～15.0</option>
-              <option th:value="16～20" th:selected="${selectedTemp == '16～20'}">16.0～20.0</option>
-              <option th:value="21～25" th:selected="${selectedTemp == '21～25'}">21.0～25.0</option>
-              <option th:value="26～30" th:selected="${selectedTemp == '26～30'}">26.0～30.0</option>
-              <option th:value="31～35" th:selected="${selectedTemp == '31～35'}">31.0～34.9</option>
-              <option th:value="35以上" th:selected="${selectedTemp == '35以上'}">35.0以上</option>
+              <option th:value="-11以下" th:selected="${selectedTemp=='-11以下'}">-10.0未満</option>
+              <option th:value="-10～-6" th:selected="${selectedTemp=='-10～-6'}">-10.0～-6.0</option>
+              <option th:value="-5～0" th:selected="${selectedTemp=='-5～0'}">-5.0～0.0</option>
+              <option th:value="1～5" th:selected="${selectedTemp=='1～5'}">1.0～5.0</option>
+              <option th:value="6～10" th:selected="${selectedTemp=='6～10'}">6.0～10.0</option>
+              <option th:value="11～15" th:selected="${selectedTemp=='11～15'}">11.0～15.0</option>
+              <option th:value="16～20" th:selected="${selectedTemp=='16～20'}">16.0～20.0</option>
+              <option th:value="21～25" th:selected="${selectedTemp=='21～25'}">21.0～25.0</option>
+              <option th:value="26～30" th:selected="${selectedTemp=='26～30'}">26.0～30.0</option>
+              <option th:value="31～35" th:selected="${selectedTemp=='31～35'}">31.0～35.0</option>
+              <option th:value="35以上" th:selected="${selectedTemp=='35以上'}">35.0以上</option>
+            </select>
+          </div>
+
+          <!-- 並び替え -->
+          <div class="filter-item">
+            <label>並び替え</label>
+            <select name="sort" id="sort-select">
+              <option value="salesDate,asc" th:selected="${currentSort=='salesDate,asc'}">日付↑</option>
+              <option value="salesDate,desc" th:selected="${currentSort=='salesDate,desc'}">日付↓</option>
+
+              <option value="weather,asc" th:selected="${currentSort=='weather,asc'}">天気↑</option>
+              <option value="weather,desc" th:selected="${currentSort=='weather,desc'}">天気↓</option>
+
+              <option value="brand,asc" th:selected="${currentSort=='brand,asc'}">銘柄↑</option>
+              <option value="brand,desc" th:selected="${currentSort=='brand,desc'}">銘柄↓</option>
+
+              <option value="quantity,asc" th:selected="${currentSort=='quantity,asc'}">本数↑</option>
+              <option value="quantity,desc" th:selected="${currentSort=='quantity,desc'}">本数↓</option>
+
+              <option value="totalSales,asc" th:selected="${currentSort=='totalSales,asc'}">売上金額↑</option>
+              <option value="totalSales,desc" th:selected="${currentSort=='totalSales,desc'}">売上金額↓</option>
+
+              <option value="precipitation,asc" th:selected="${currentSort=='precipitation,asc'}">降水量↑</option>
+              <option value="precipitation,desc" th:selected="${currentSort=='precipitation,desc'}">降水量↓</option>
+
+              <option value="temperature,asc" th:selected="${currentSort=='temperature,asc'}">平均気温↑</option>
+              <option value="temperature,desc" th:selected="${currentSort=='temperature,desc'}">平均気温↓</option>
             </select>
           </div>
 
@@ -155,9 +184,9 @@
           <button type="submit" class="btn submit">検索</button>
         </div>
       </form>
-
     </section>
 
+    <!-- テーブル表示 -->
     <section class="table-section">
       <table class="data-table" id="sales-table">
         <thead>
@@ -177,7 +206,7 @@
             <td th:text="${record.weather}"></td>
             <td th:text="${record.brand}"></td>
             <td th:text="${record.quantity}"></td>
-            <td th:text="${record.totalSales}"></td>
+            <td th:text="${record.totalSalesFormatted}"></td>
             <td th:text="${record.precipitation}"></td>
             <td th:text="${record.temperature}"></td>
           </tr>
@@ -185,10 +214,88 @@
       </table>
     </section>
 
-    <section class="chart-section">
+    <!-- ページャー -->
+    <section class="pagination">
+      <!-- Prev ボタン -->
+      <a th:href="@{/sales-weather(
+       year=${selectedYear},
+       month=${selectedMonth},
+       weather=${selectedWeather},
+       brand=${selectedBrand},
+       volume=${selectedVolume},
+       sales=${selectedSales},
+       rain=${selectedRain},
+       temp=${selectedTemp},
+       page=${currentPage - 1},
+       size=${pageSize},
+       sort=${currentSort}
+     )}" th:class="'page-btn arrow' + (${currentPage == 0} ? ' disabled' : '')">
+        «
+      </a>
+
+      <!-- 動的範囲ページ -->
+      <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a th:href="@{/sales-weather(
+         year=${selectedYear},
+         month=${selectedMonth},
+         weather=${selectedWeather},
+         brand=${selectedBrand},
+         volume=${selectedVolume},
+         sales=${selectedSales},
+         rain=${selectedRain},
+         temp=${selectedTemp},
+         page=${i},
+         size=${pageSize},
+         sort=${currentSort}
+       )}" th:text="${i + 1}" th:class="'page-btn' + (${i == currentPage} ? ' active' : '')">
+        </a>
+      </span>
+
+      <!-- Gap after -->
+      <span th:if="${endPage < totalPages - 2}" class="dots">…</span>
+
+      <!-- 最終ページリンク -->
+      <span th:if="${endPage < totalPages - 1}">
+        <a th:href="@{/sales-weather(
+         year=${selectedYear},
+         month=${selectedMonth},
+         weather=${selectedWeather},
+         brand=${selectedBrand},
+         volume=${selectedVolume},
+         sales=${selectedSales},
+         rain=${selectedRain},
+         temp=${selectedTemp},
+         page=${totalPages - 1},
+         size=${pageSize},
+         sort=${currentSort}
+       )}" th:text="${totalPages}" th:class="'page-btn' + (${currentPage == totalPages - 1} ? ' active' : '')">
+        </a>
+      </span>
+
+      <!-- Next ボタン -->
+      <a th:href="@{/sales-weather(
+       year=${selectedYear},
+       month=${selectedMonth},
+       weather=${selectedWeather},
+       brand=${selectedBrand},
+       volume=${selectedVolume},
+       sales=${selectedSales},
+       rain=${selectedRain},
+       temp=${selectedTemp},
+       page=${currentPage + 1},
+       size=${pageSize},
+       sort=${currentSort}
+     )}" th:class="'page-btn arrow' + (${currentPage + 1 >= totalPages} ? ' disabled' : '')">
+        »
+      </a>
+    </section>
+
+
+    <!-- チャート表示 -->
+    <!-- <section class="chart-section">
       <h3>販売実績と天気の折れ線グラフ</h3>
       <canvas id="salesChart" class="chart-placeholder"></canvas>
-    </section>
+    </section> -->
   </main>
 </body>
 

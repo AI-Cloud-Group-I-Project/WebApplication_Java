@@ -13,7 +13,6 @@ import com.example.SalesForecast.domain.product.entity.ProductStatus;
 import com.example.SalesForecast.domain.product.repository.ProductRepository;
 import com.example.SalesForecast.domain.product.repository.ProductStatusRepository;
 import com.example.SalesForecast.domain.product.service.ProductService;
-
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +40,10 @@ public class ProductController {
     @Autowired
     private ProductStatusRepository productStatusRepository;
 
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
+
     @GetMapping("/products")
     public String getProducts(
             Model model,
@@ -49,7 +52,7 @@ public class ProductController {
             @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Product> productPage = productRepository.findAll(pageable);
+        Page<Product> productPage = productService.getProductsByPage(pageable);
 
         model.addAttribute("productList", productPage.getContent());
         model.addAttribute("currentPage", page);
@@ -77,17 +80,16 @@ public class ProductController {
         // ステータスがnullなら DBから取得して設定
         if (product.getStatus() == null) {
             ProductStatus defaultStatus = productStatusRepository
-                .findById(1)
-                .orElseThrow(() -> new IllegalStateException("Default status not found"));
+                    .findById(1)
+                    .orElseThrow(() -> new IllegalStateException("Default status not found"));
             product.setStatus(defaultStatus);
         }
-
 
         productService.addProduct(product);
         return "redirect:/products";
     }
 
-      @PostMapping("/products/toggleStatus/{id}")
+    @PostMapping("/products/toggleStatus/{id}")
     public ResponseEntity<Void> toggleStatus(@PathVariable Integer id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
@@ -110,47 +112,4 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
-  
-//    @PostMapping("/products/toggleStatus/{id}")
-//     public ResponseEntity<Void> toggleStatus(@PathVariable Integer id) {
-//         Optional<Product> optionalProduct = productRepository.findById(id);
-//         if (optionalProduct.isPresent()) {
-//             Product product = optionalProduct.get();
-
-// <<<<<<< kobayashi
-//             ProductStatus currentStatus = product.getStatus();
-//             ProductStatus newStatus = new ProductStatus();
-
-//             if (currentStatus.getId() == 1) {
-//                 newStatus.setId(2); // 「販売終了」
-// =======
-
-//             int currentStatusId = product.getStatus().getId();
-//             int newStatusId;
-
-
-//             if (currentStatusId == 1) {
-//                 newStatusId = 2; // 「販売終了」
-// >>>>>>> main
-//             } else {
-//                 newStatusId = 1; // 「販売中」
-//             }
-
-
-//             // データベースから新しいステータスを取得
-//             ProductStatus newStatus = productStatusRepository
-//                 .findById(newStatusId)
-//                 .orElseThrow(() -> new IllegalStateException("ステータスが見つかりません"));
-
-
-//             product.setStatus(newStatus);
-//             productRepository.save(product);
-
-
-//             return ResponseEntity.ok().build();
-//         } else {
-//             return ResponseEntity.notFound().build();
-//         }
-//     }
-
 }

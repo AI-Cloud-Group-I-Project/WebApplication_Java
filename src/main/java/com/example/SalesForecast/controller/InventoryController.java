@@ -2,8 +2,8 @@ package com.example.SalesForecast.controller;
 
 import com.example.SalesForecast.domain.inventory.entity.Inventory;
 import com.example.SalesForecast.domain.inventory.entity.ProductReceipt;
-import com.example.SalesForecast.domain.inventory.repository.ProductReceiptRepository;
 import com.example.SalesForecast.domain.inventory.service.InventoryService;
+import com.example.SalesForecast.domain.inventory.service.ProductReceiptService;
 import com.example.SalesForecast.domain.product.entity.Product;
 import com.example.SalesForecast.domain.product.service.ProductService;
 
@@ -23,7 +23,7 @@ public class InventoryController {
     private InventoryService inventoryService;
 
     @Autowired
-    private ProductReceiptRepository productReceiptRepository;
+    private ProductReceiptService productReceiptService;
 
     @Autowired
     private ProductService productService;
@@ -37,7 +37,7 @@ public class InventoryController {
         List<Inventory> inventoryList = inventoryService.getAllInventories();
         model.addAttribute("inventoryList", inventoryList);
 
-        List<ProductReceipt> todayReceipts = productReceiptRepository.findByReceivedDate(LocalDate.now());
+        List<ProductReceipt> todayReceipts = productReceiptService.findByReceivedDate(LocalDate.now());
         model.addAttribute("todayReceipts", todayReceipts);
 
         List<Product> availableProducts = productService.getAvailableProducts();
@@ -46,12 +46,11 @@ public class InventoryController {
         return "admin-inventories";
     }
 
-   // 商品入荷の登録（複数行対応）
+    // 商品入荷の登録（複数行対応）
     @PostMapping("/inventories/add")
     public String addInventories(
-        @RequestParam("janCodes") List<String> janCodes,
-        @RequestParam("quantities") List<Integer> quantities
-    ) {
+            @RequestParam("janCodes") List<String> janCodes,
+            @RequestParam("quantities") List<Integer> quantities) {
         for (int i = 0; i < janCodes.size(); i++) {
             String janCode = janCodes.get(i);
             Integer quantity = quantities.get(i);
@@ -65,7 +64,7 @@ public class InventoryController {
             } catch (IllegalArgumentException e) {
                 // JANコードが不正な場合はスキップ
                 continue;
-             } catch (IllegalStateException e) {
+            } catch (IllegalStateException e) {
                 System.out.println("【ログ】入荷済み商品の重複入力: " + janCode);
                 return "redirect:/inventories?error=alreadyExists";
             }
@@ -74,13 +73,11 @@ public class InventoryController {
         return "redirect:/inventories";
     }
 
-
     // 入荷済み商品の編集（当日分のみ）
     @PostMapping("/inventories/update")
     public String updateInventory(
             @RequestParam("productId") Integer productId,
-            @RequestParam("quantity") Integer quantity
-    ) {
+            @RequestParam("quantity") Integer quantity) {
         if (quantity < 0) {
             return "redirect:/inventories?error=negative";
         }
