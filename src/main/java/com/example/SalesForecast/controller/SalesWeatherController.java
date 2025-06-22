@@ -40,12 +40,26 @@ public class SalesWeatherController {
             @RequestParam(required = false) String temp,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "salesDate,asc") String sort,
+            @RequestParam(defaultValue = "salesDate,desc") String sort,
             Model model,
             HttpSession session) {
         // ログイン情報
-        model.addAttribute("current_username", session.getAttribute("username"));
-        model.addAttribute("current_email", session.getAttribute("email"));
+        String loginUserName = (String) session.getAttribute("username");
+        String loginUserEmail = (String) session.getAttribute("email");
+        String loginUserRole = (String) session.getAttribute("login_user_role");
+        String loginUserStatus = (String) session.getAttribute("login_user_status");
+
+        if (loginUserName == null) {
+            return "access-denied";
+        }
+        if (!loginUserRole.equals("admin") && !loginUserRole.equals("user") && !loginUserRole.equals("viewer")) {
+            return "authority-denied";
+        }
+
+        model.addAttribute("current_username", loginUserName);
+        model.addAttribute("current_email", loginUserEmail);
+        model.addAttribute("login_user_role", loginUserRole);
+        model.addAttribute("login_user_status", loginUserStatus);
 
         // フィルタ用リスト
         model.addAttribute("years", salesService.getAvailableYears());
@@ -95,6 +109,6 @@ public class SalesWeatherController {
         model.addAttribute("selectedRain", rain);
         model.addAttribute("selectedTemp", temp);
 
-        return "admin-weather-sales";
+        return "weather-sales";
     }
 }

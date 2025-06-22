@@ -31,8 +31,23 @@ public class InventoryController {
     // 在庫一覧ページを表示
     @GetMapping("/inventories")
     public String showInventoryPage(Model model, HttpSession session) {
-        model.addAttribute("current_username", session.getAttribute("username"));
-        model.addAttribute("current_email", session.getAttribute("email"));
+        // ログイン情報
+        String loginUserName = (String) session.getAttribute("username");
+        String loginUserEmail = (String) session.getAttribute("email");
+        String loginUserRole = (String) session.getAttribute("login_user_role");
+        String loginUserStatus = (String) session.getAttribute("login_user_status");
+
+        if (loginUserName == null) {
+            return "access-denied";
+        }
+        if (!loginUserRole.equals("admin")) {
+            return "authority-denied";
+        }
+
+        model.addAttribute("current_username", loginUserName);
+        model.addAttribute("current_email", loginUserEmail);
+        model.addAttribute("login_user_role", loginUserRole);
+        model.addAttribute("login_user_status", loginUserStatus);
 
         List<Inventory> inventoryList = inventoryService.getAllInventories();
         model.addAttribute("inventoryList", inventoryList);
@@ -43,7 +58,7 @@ public class InventoryController {
         List<Product> availableProducts = productService.getAvailableProducts();
         model.addAttribute("availableProducts", availableProducts);
 
-        return "admin-inventories";
+        return "inventories";
     }
 
     // 商品入荷の登録（複数行対応）

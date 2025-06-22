@@ -1,4 +1,4 @@
-package com.example.SalesForecast.domain.forecast.client;
+package com.example.SalesForecast.domain.api;
 
 import org.springframework.stereotype.Component;
 
@@ -7,7 +7,7 @@ import com.example.SalesForecast.domain.weather.dto.WeatherDto;
 import java.time.LocalDate;
 
 @Component
-public class ForecastApiClient {
+public class GetWeatherApiClient {
     public WeatherDto fetchWeather(LocalDate date) {
 
         // テスト用ダミーデータ返却
