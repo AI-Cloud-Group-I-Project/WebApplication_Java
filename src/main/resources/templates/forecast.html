@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <title>需要予測ページ</title>
-  <link rel="stylesheet" th:href="@{/css/admin-forecast.css}">
-  <!-- <link rel="stylesheet" href="../static/css/admin-forecast.css"> -->
+  <link rel="stylesheet" th:href="@{/css/forecast.css}">
+  <!-- <link rel="stylesheet" href="../static/css/forecast.css"> -->
 </head>
 
 <body>
@@ -13,12 +13,14 @@
   <aside class="sidebar">
     <ul class="menu">
       <li class="menu-title">メニュー一覧</li>
-      <li><a href="/sales-weather">実績と天気の確認</a></li>
-      <li><a href="/users">ユーザー管理</a></li>
-      <li><a href="/record">販売実績入力</a></li>
-      <li class="active"><a href="/forecast">需要予測</a></li>
-      <li><a href="/products">商品管理</a></li>
-      <li><a href="/inventories">入荷と在庫管理</a></li>
+      <li th:if="${login_user_role == 'admin' or login_user_role == 'user' or login_user_role == 'viewer'}"><a
+          href="/sales-weather">実績と天気の確認</a></li>
+      <li th:if="${login_user_role == 'admin'}"><a href="/users">ユーザー管理</a></li>
+      <li th:if="${login_user_role == 'admin' or login_user_role == 'user'}"><a href="/record">販売実績入力</a></li>
+      <li th:if="${login_user_role == 'admin' or login_user_role == 'user' or login_user_role == 'viewer'}"
+        class="active"><a href="/forecast">需要予測</a></li>
+      <li th:if="${login_user_role == 'admin'}"><a href="/products">商品管理</a></li>
+      <li th:if="${login_user_role == 'admin'}"><a href="/inventories">入荷と在庫管理</a></li>
     </ul>
   </aside>
 

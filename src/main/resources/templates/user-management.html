@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <title>ユーザー管理</title>
-  <link rel="stylesheet" th:href="@{/css/admin-user-management.css}">
-  <script th:inline="javascript">
-    window.roles = [
-      { id: 1, name: "admin" },
-      { id: 2, name: "user" },
-      { id: 3, name: "viewer" }
-    ];
+  <link rel="stylesheet" th:href="@{/css/user-management.css}">
+  <script th:src="@{/js/user-management.js}" defer></script>
+  <!-- <script src="../static/js/user-management.js" defer></script> -->
+
+  <script th:if="${message}" th:inline="javascript">
+    /*<![CDATA[*/
+    alert(
+      /*[[${message}]]*/
+    );
+    /*]]>*/
   </script>
 </head>
 
@@ -19,12 +23,14 @@
   <aside class="sidebar">
     <ul class="menu">
       <li class="menu-title">メニュー一覧</li>
-      <li><a href="/sales-weather">実績と天気の確認</a></li>
-      <li class="active"><a href="/users">ユーザー管理</a></li>
-      <li><a href="/record">販売実績入力</a></li>
-      <li><a href="/forecast">需要予測</a></li>
-      <li><a href="/products">商品管理</a></li>
-      <li><a href="/inventories">入荷と在庫管理</a></li>
+      <li th:if="${login_user_role == 'admin' or login_user_role == 'user' or login_user_role == 'viewer'}"><a
+          href="/sales-weather">実績と天気の確認</a></li>
+      <li th:if="${login_user_role == 'admin'}" class="active"><a href="/users">ユーザー管理</a></li>
+      <li th:if="${login_user_role == 'admin' or login_user_role == 'user'}"><a href="/record">販売実績入力</a></li>
+      <li th:if="${login_user_role == 'admin' or login_user_role == 'user' or login_user_role == 'viewer'}"><a
+          href="/forecast">需要予測</a></li>
+      <li th:if="${login_user_role == 'admin'}"><a href="/products">商品管理</a></li>
+      <li th:if="${login_user_role == 'admin'}"><a href="/inventories">入荷と在庫管理</a></li>
     </ul>
   </aside>
 
@@ -110,7 +116,8 @@
                     <td style="width: 25%;"><input type="email" name="email" th:value="${user.email}" disabled /></td>
                     <td style="width: 10%;">
                       <select name="role.id" disabled>
-                        <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}" th:selected="${role.id == user.role.id}"></option>
+                        <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"
+                          th:selected="${role.id == user.role.id}"></option>
                       </select>
                     </td>
                     <td style="width: 10%;">
@@ -123,7 +130,8 @@
                       <input type="hidden" name="id" th:value="${user.id}" />
                       <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
                       <button class="btn submit" type="submit" name="action" value="submit" disabled>Submit</button>
-                      <button class="btn reset" type="submit" name="action" value="reset">Password Reset</button>
+                      <button class="btn reset" type="submit" th:formaction="@{/users/password-force-reset}"
+                        formmethod="post">Password Reset</button>
                     </td>
                   </tr>
                 </table>
@@ -142,52 +150,18 @@
 
       <!-- Pagination -->
       <section class="pagination">
-        <a th:href="@{/users(page=${currentPage - 1})}" th:classappend="${currentPage == 0} ? ' disabled'" class="page-btn arrow" th:if="${totalPages > 1}">&laquo;</a>
+        <a th:href="@{/users(page=${currentPage - 1})}" th:classappend="${currentPage == 0} ? ' disabled'"
+          class="page-btn arrow" th:if="${totalPages > 1}">&laquo;</a>
         <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-          <a th:href="@{/users(page=${i})}" th:text="${i + 1}" th:class="'page-btn' + (${i} == ${currentPage} ? ' active' : '')"></a>
+          <a th:href="@{/users(page=${i})}" th:text="${i + 1}"
+            th:class="'page-btn' + (${i} == ${currentPage} ? ' active' : '')"></a>
         </span>
-        <a th:href="@{/users(page=${currentPage + 1})}" th:classappend="${currentPage + 1 >= totalPages} ? ' disabled'" class="page-btn arrow" th:if="${totalPages > 1}">&raquo;</a>
+        <a th:href="@{/users(page=${currentPage + 1})}" th:classappend="${currentPage + 1 >= totalPages} ? ' disabled'"
+          class="page-btn arrow" th:if="${totalPages > 1}">&raquo;</a>
       </section>
     </section>
   </main>
 
-
-  <!-- JS -->
-  <script>
-    function enableEdit(btn) {
-      const form = btn.closest("form");
-      form.querySelectorAll("input, select").forEach(el => el.disabled = false);
-      form.querySelector(".submit").disabled = false;
-    }
-
-
-    function toggleUserFilter() {
-      const checkbox = document.getElementById("showActiveOnly");
-      const rows = document.querySelectorAll("tr[data-status]");
-
-
-      rows.forEach(row => {
-        // ⬇️ addRow は無視
-        if (row.id === "addRow") return;
-
-
-        const status = row.getAttribute("data-status");
-        row.style.display = checkbox.checked && status !== "active" ? "none" : "";
-      });
-    }
-
-
-
-    function updateStatusAttr(sel) {
-      const tr = sel.closest("tr");
-      if (tr) tr.setAttribute("data-status", sel.value);
-    }
-
-
-    function toggleAddRow() {
-      const row = document.getElementById("addRow");
-      row.style.display = (row.style.display === "none" || !row.style.display) ? "" : "none";
-    }
-  </script>
 </body>
+
 </html>

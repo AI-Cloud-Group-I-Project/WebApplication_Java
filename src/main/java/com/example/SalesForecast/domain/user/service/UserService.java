@@ -83,4 +83,25 @@ public class UserService {
         return userRepository.findAllByOrderByCreatedDateDesc(pageable);
     }
 
+    @Transactional
+    public void resetPassword(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません (id=" + userId + ")"));
+
+        LoginCredential credential = loginCredentialRepository.findById(userId)
+                .orElseGet(() -> {
+                    LoginCredential lc = new LoginCredential();
+                    lc.setUser(user);
+                    lc.setCreatedDate(LocalDate.now());
+                    return lc;
+                });
+
+        String temporaryPassword = "password1234";
+
+        credential.setPasswordHash(PasswordUtil.hash(temporaryPassword));
+        credential.setEditedDate(LocalDate.now());
+
+        loginCredentialRepository.save(credential);
+    }
+
 }

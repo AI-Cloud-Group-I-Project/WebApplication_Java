@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS product_price_histories;
 DROP TABLE IF EXISTS login_credentials;
 DROP TABLE IF EXISTS product_receipts;
 DROP TABLE IF EXISTS inventories;
@@ -98,6 +99,18 @@ CREATE TABLE product_receipts (
         REFERENCES products(id)
 );
 
+
+CREATE TABLE product_price_histories (
+  id SERIAL PRIMARY KEY,
+  product_id INT NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  effective_from DATE NOT NULL DEFAULT CURRENT_DATE,
+  effective_to DATE NULL,
+  changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_product_price_histories_product FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+
 -- roles データ投入
 INSERT INTO roles (id, name) VALUES (1, 'admin');
 INSERT INTO roles (id, name) VALUES (2, 'user');
@@ -147,7 +160,7 @@ INSERT INTO products (name, price, jan_code, status_id)
 VALUES 
   ('ホワイトビール', 900, '4901234567894', 1),
   ('ラガー', 800, '4512345678907', 1),
-  ('ペールエール', 1000, '4987654321097', 1),
+  ('ペールエール', 900, '4987654321097', 1),
   ('フルーツビール', 1000, '4545678901234', 1),
   ('黒ビール', 1200, '4999999999996', 1),
   ('IPA', 900, '4571234567892', 1);
@@ -155,12 +168,12 @@ VALUES
 -- inventories 初期データ投入
 INSERT INTO inventories (product_id, stock_quantity)
 VALUES
-  (1, 0),
-  (2, 0),
-  (3, 0),
-  (4, 0),
-  (5, 0),
-  (6, 0);
+  (1, 30),
+  (2, 30),
+  (3, 30),
+  (4, 30),
+  (5, 30),
+  (6, 30);
 
 
 -- 前提：products テーブルに ID=1,2 の商品が登録されていること
@@ -172,3 +185,22 @@ VALUES
     (4, 30, '2025-06-20', CURRENT_TIMESTAMP),
     (5, 30, '2025-06-20', CURRENT_TIMESTAMP),
     (6, 30, '2025-06-20', CURRENT_TIMESTAMP);
+
+
+-- 価格変更履歴データ
+INSERT INTO product_price_histories(product_id,price,effective_from)
+VALUES
+    (1,900,'2024-01-01'),
+    (2,800,'2024-01-01');
+INSERT INTO product_price_histories(product_id,price,effective_from, effective_to)
+VALUES
+    (3,1000,'2024-01-01','2025-03-30');
+INSERT INTO product_price_histories(product_id,price,effective_from)
+VALUES
+    (4,1000,'2024-01-01'),
+    (5,1200,'2024-01-01'),
+    (6,900,'2024-01-01');
+
+INSERT INTO product_price_histories(product_id,price,effective_from)
+VALUES
+    (3,900,'2025-03-30');

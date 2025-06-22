@@ -28,11 +28,17 @@ public class LoginController {
             HttpSession session) {
         User user = loginService.login(email, password);
         if (user != null) {
+            if ("retired".equals(user.getStatus())) {
+                model.addAttribute("error", "退職済みのユーザーはログインできません。");
+                return "login";
+            }
             session.setAttribute("username", user.getName());
             session.setAttribute("email", user.getEmail());
+            session.setAttribute("login_user_role", user.getRole().getName());
+            session.setAttribute("login_user_status", user.getStatus());
             return "redirect:/sales-weather";
         } else {
-            model.addAttribute("error", "ログイン失敗");
+            model.addAttribute("error", "Emailまたがパスワードが正しくありません。");
             return "login";
         }
     }

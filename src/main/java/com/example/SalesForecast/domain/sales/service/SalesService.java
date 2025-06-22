@@ -1,8 +1,10 @@
 package com.example.SalesForecast.domain.sales.service;
 
-import com.example.SalesForecast.domain.forecast.client.ForecastApiClient;
+import com.example.SalesForecast.domain.api.GetWeatherApiClient;
 import com.example.SalesForecast.domain.inventory.service.InventoryService;
 import com.example.SalesForecast.domain.product.entity.Product;
+import com.example.SalesForecast.domain.product.entity.ProductPriceHistory;
+import com.example.SalesForecast.domain.product.repository.ProductPriceHistoryRepository;
 import com.example.SalesForecast.domain.product.service.ProductService;
 import com.example.SalesForecast.domain.sales.dto.BeerInfoDto;
 import com.example.SalesForecast.domain.sales.entity.Sales;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,20 +32,23 @@ public class SalesService {
 
     private final SalesRepository salesRepository;
     private final WeatherService weatherService;
-    private final ForecastApiClient forecastApiClient;
+    private final GetWeatherApiClient getWeatherApiClient;
     private final ProductService productService;
     private final InventoryService inventoryService;
+    private final ProductPriceHistoryRepository historyRepository;
 
     public SalesService(SalesRepository salesRepository,
             WeatherService weatherService,
-            ForecastApiClient forecastApiClient,
+            GetWeatherApiClient getWeatherApiClient,
             ProductService productService,
-            InventoryService inventoryService) {
+            InventoryService inventoryService,
+            ProductPriceHistoryRepository historyRepository) {
         this.salesRepository = salesRepository;
         this.weatherService = weatherService;
-        this.forecastApiClient = forecastApiClient;
+        this.getWeatherApiClient = getWeatherApiClient;
         this.productService = productService;
         this.inventoryService = inventoryService;
+        this.historyRepository = historyRepository;
     }
 
     // 選択した条件で絞り込み
@@ -55,7 +61,7 @@ public class SalesService {
             String salesRange,
             String rainRange,
             String tempRange) {
-        return salesRepository.findAll().stream()
+        List<Sales> filteredSales = salesRepository.findAll().stream()
 
                 // 年フィルタ
                 .filter(sale -> year == null || sale.getSalesDate().getYear() == year)
@@ -165,10 +171,68 @@ public class SalesService {
 
                     return true;
                 })
-
-                // DTOマップに変換
-                .map(this::toMap)
                 .collect(Collectors.toList());
+
+        // ── (B) 必要な productId と salesDate の範囲を取得 ──
+        List<Integer> productIds = filteredSales.stream()
+                .map(s -> s.getProduct().getId())
+                .distinct()
+                .collect(Collectors.toList());
+        LocalDate minDate = filteredSales.stream()
+                .map(Sales::getSalesDate)
+                .min(LocalDate::compareTo)
+                .orElse(LocalDate.now());
+        LocalDate maxDate = filteredSales.stream()
+                .map(Sales::getSalesDate)
+                .max(LocalDate::compareTo)
+                .orElse(LocalDate.now());
+
+        // ── (C) 履歴を一括フェッチ ──
+        List<ProductPriceHistory> histories = historyRepository.findByProductIdsAndDateRange(productIds, minDate,
+                maxDate);
+
+        // ── (D) Java 側で「effectiveFrom/changedAt 降順」で最適レコードを選抜 ──
+        // キーを "productId_salesDate" の文字列にして Map に詰める
+        Map<String, BigDecimal> priceMap = new HashMap<>();
+        for (Sales sale : filteredSales) {
+            String key = sale.getProduct().getId() + "_" + sale.getSalesDate();
+            ProductPriceHistory best = histories.stream()
+                    .filter(h -> h.getProduct().getId().equals(sale.getProduct().getId()))
+                    .filter(h -> !h.getEffectiveFrom().isAfter(sale.getSalesDate()))
+                    .filter(h -> h.getEffectiveTo() == null
+                            || !h.getEffectiveTo().isBefore(sale.getSalesDate()))
+                    .sorted(Comparator
+                            .comparing(ProductPriceHistory::getEffectiveFrom).reversed()
+                            .thenComparing(
+                                    Comparator.comparing(ProductPriceHistory::getChangedAt).reversed()))
+                    .findFirst()
+                    .orElse(null);
+            priceMap.put(key, (best != null ? best.getPrice() : BigDecimal.ZERO));
+        }
+
+        // ── (E) 価格を priceMap から取り出して Map<String,Object> に詰める ──
+        List<Map<String, Object>> records = new ArrayList<>();
+        for (Sales sale : filteredSales) {
+            Map<String, Object> rec = new HashMap<>();
+            rec.put("salesDate", sale.getSalesDate());
+            rec.put("brand", sale.getProduct().getName());
+            rec.put("quantity", sale.getQuantity());
+
+            String key = sale.getProduct().getId() + "_" + sale.getSalesDate();
+            BigDecimal priceDec = priceMap.get(key);
+            int price = priceDec.intValue();
+            int total = price * sale.getQuantity();
+
+            rec.put("totalSales", total);
+            rec.put("totalSalesFormatted", String.format("%,d", total));
+            rec.put("weather", sale.getWeather().getWeatherCondition());
+            rec.put("precipitation", sale.getWeather().getPrecipitation());
+            rec.put("temperature", sale.getWeather().getAverageTemperature());
+
+            records.add(rec);
+        }
+
+        return records;
     }
 
     /**
@@ -221,30 +285,6 @@ public class SalesService {
         return new PageImpl<>(content, pageable, all.size());
     }
 
-    // 画面表示用 Map 組み立て
-    private Map<String, Object> toMap(Sales sale) {
-        Map<String, Object> record = new HashMap<>();
-        record.put("salesDate", sale.getSalesDate());
-        record.put("brand", sale.getProduct().getName());
-        record.put("quantity", sale.getQuantity());
-
-        // 金額計算
-        int price = Optional.ofNullable(sale.getProduct().getPrice())
-                .map(Double::intValue)
-                .orElse(0);
-        int totalSales = price * sale.getQuantity();
-        record.put("totalSales", totalSales);
-        String formattedTotalSales = String.format("%,d", totalSales);
-        record.put("totalSalesFormatted", formattedTotalSales);
-
-        Weather weatherEntity = sale.getWeather();
-        record.put("weather", weatherEntity.getWeatherCondition());
-        record.put("precipitation", weatherEntity.getPrecipitation());
-        record.put("temperature", weatherEntity.getAverageTemperature());
-
-        return record;
-    }
-
     /**
      * フォーム用：利用可能な年リスト
      */
@@ -291,7 +331,7 @@ public class SalesService {
         // 1) Weather を取得 or 作成
         Weather weather = weatherService.getByDate(date)
                 .orElseGet(() -> {
-                    WeatherDto dto = forecastApiClient.fetchWeather(date);
+                    WeatherDto dto = getWeatherApiClient.fetchWeather(date);
                     Weather w = new Weather();
                     w.setDate(LocalDate.parse(dto.getDate())); // String → LocalDate に変換
                     w.setAverageTemperature(dto.getTemperature());

@@ -50,6 +50,23 @@ public class ProductController {
             HttpSession session,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+        // ログイン情報
+        String loginUserName = (String) session.getAttribute("username");
+        String loginUserEmail = (String) session.getAttribute("email");
+        String loginUserRole = (String) session.getAttribute("login_user_role");
+        String loginUserStatus = (String) session.getAttribute("login_user_status");
+
+        if (loginUserName == null) {
+            return "access-denied";
+        }
+        if (!loginUserRole.equals("admin")) {
+            return "authority-denied";
+        }
+
+        model.addAttribute("current_username", loginUserName);
+        model.addAttribute("current_email", loginUserEmail);
+        model.addAttribute("login_user_role", loginUserRole);
+        model.addAttribute("login_user_status", loginUserStatus);
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> productPage = productService.getProductsByPage(pageable);
@@ -58,10 +75,7 @@ public class ProductController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productPage.getTotalPages());
 
-        model.addAttribute("current_username", session.getAttribute("username"));
-        model.addAttribute("current_email", session.getAttribute("email"));
-
-        return "admin-product-management";
+        return "product-management";
     }
 
     @PostMapping("/products/update")

@@ -10,9 +10,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ForecastController {
     @GetMapping("/forecast")
     public String showForecastPage(Model model, HttpSession session) {
-        model.addAttribute("current_username", session.getAttribute("username"));
-        model.addAttribute("current_email", session.getAttribute("email"));
+        // ログイン情報
+        String loginUserName = (String) session.getAttribute("username");
+        String loginUserEmail = (String) session.getAttribute("email");
+        String loginUserRole = (String) session.getAttribute("login_user_role");
+        String loginUserStatus = (String) session.getAttribute("login_user_status");
 
-        return "admin-forecast";
+        if (loginUserName == null) {
+            return "access-denied";
+        }
+        if (!loginUserRole.equals("admin") && !loginUserRole.equals("user") && !loginUserRole.equals("viewer")) {
+            return "authority-denied";
+        }
+
+        model.addAttribute("current_username", loginUserName);
+        model.addAttribute("current_email", loginUserEmail);
+        model.addAttribute("login_user_role", loginUserRole);
+        model.addAttribute("login_user_status", loginUserStatus);
+
+        return "forecast";
     }
 }
