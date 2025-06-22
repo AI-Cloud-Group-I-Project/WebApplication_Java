@@ -47,15 +47,20 @@
 
 .form-grid {
   display: flex;
-  gap: 20px; /* 要素間の余白 */
+  gap: 20px;
+  /* 要素間の余白 */
 }
 
-.form-grid > div {
-  flex: 1; /* 1:1 の比率にする */
+.form-grid>div {
+  flex: 1;
+  /* 1:1 の比率にする */
 }
 
 .form-grid select {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
   width: 100%;
+  font-size: 15px;
   max-width: 100%;
-  box-sizing: border-box;
 }

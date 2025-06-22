@@ -135,12 +135,13 @@ body {
 /* -------- ボタン共通 -------- */
 .button-row {
     margin-top: 30px;
+    padding: 3px;
     display: flex;
     justify-content: center;
     gap: 20px;
-    flex-wrap: nowrap;      
-    white-space: nowrap;   
-    overflow-x: auto;       
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow-x: auto;
 }
 
 .btn {
