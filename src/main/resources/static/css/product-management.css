@@ -21,26 +21,28 @@
 
 /* -------- 商品情報テーブルの入力欄 -------- */
 .product-table input {
-  width: 80%; 
+  width: 80%;
   padding: 6px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
   box-sizing: border-box;
-  font-size: 14px; 
+  font-size: 14px;
 }
 
 /* -------- 商品情報テーブルのセル -------- */
 .product-table td {
-  white-space: normal;  
+  white-space: normal;
   word-break: break-word;
   padding: 10px;
-  max-width: 200px; 
+  max-width: 200px;
 }
 
 
 .btn.toggle {
-  background-color: #b15a50;;
+  background-color: #b15a50;
+  ;
 }
+
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -59,4 +61,45 @@
 .filter-toggle input[type="checkbox"] {
   margin-right: 8px;
   transform: scale(1.2);
+}
+
+.product-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* ヘッダーとボディで同じ幅にしたいので thead と tbody 両方を対象に */
+.product-table th:nth-child(1),
+.product-table td:nth-child(1) {
+  /* 銘柄 */
+  width: 28%;
+}
+
+.product-table th:nth-child(2),
+.product-table td:nth-child(2) {
+  /* 値段 */
+  width: 9%;
+  text-align: right;
+  /* 数値を右寄せにしたい場合 */
+}
+
+.product-table th:nth-child(3),
+.product-table td:nth-child(3) {
+  /* JANコード */
+  width: 19%;
+}
+
+.product-table th:nth-child(4),
+.product-table td:nth-child(4) {
+  /* 販売状態 */
+  width: 9%;
+  text-align: center;
+}
+
+.product-table th:nth-child(5),
+.product-table td:nth-child(5) {
+  /* 操作ボタン列 */
+  width: 35%;
+  white-space: nowrap;
+  /* ボタン折返し防止 */
 }

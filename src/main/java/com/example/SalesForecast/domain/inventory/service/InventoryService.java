@@ -136,4 +136,9 @@ public class InventoryService {
         }
         inventoryRepository.save(inventory);
     }
+
+    /** ProductId で在庫エンティティを取得 */
+    public Inventory getInventoryByProductId(Integer productId) {
+        return inventoryRepository.findByProductId(productId);
+    }
 }

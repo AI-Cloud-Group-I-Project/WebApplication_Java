@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.SalesForecast.domain.product.entity.Product;
 import com.example.SalesForecast.domain.product.service.ProductService;
@@ -85,15 +86,20 @@ public class SalesController {
                         @RequestParam Integer day,
                         @RequestParam("productId") List<Integer> productIds,
                         @RequestParam("quantity") List<Integer> quantities,
-                        HttpSession session) {
+                        HttpSession session,
+                        RedirectAttributes redirectAttributes) {
 
                 LocalDate date = LocalDate.of(year, month, day);
                 String email = (String) session.getAttribute("email");
                 User user = userService
                                 .getUserByEmail(email)
                                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + email));
-
-                salesService.registerSales(date, user, productIds, quantities);
+                try {
+                        salesService.registerSales(date, user, productIds, quantities);
+                } catch (IllegalStateException ex) {
+                        redirectAttributes.addFlashAttribute("error", ex.getMessage());
+                        return "redirect:/record?year=" + year + "&month=" + month + "&day=" + day;
+                }
                 return "redirect:/record?year=" + year + "&month=" + month + "&day=" + day;
         }
 }

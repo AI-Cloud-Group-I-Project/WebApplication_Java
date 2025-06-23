@@ -9,6 +9,7 @@ import com.example.SalesForecast.domain.user.repository.UserRepository;
 import com.example.SalesForecast.util.PasswordUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,6 +18,9 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+    @Value("${init.password}")
+    private String INITAL_PASSWORD;
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final LoginCredentialRepository loginCredentialRepository;
@@ -52,7 +56,7 @@ public class UserService {
 
         LoginCredential credential = new LoginCredential();
         credential.setUser(savedUser);
-        credential.setPasswordHash(PasswordUtil.hash("password1234"));
+        credential.setPasswordHash(PasswordUtil.hash(INITAL_PASSWORD));
         credential.setCreatedDate(LocalDate.now());
         credential.setEditedDate(LocalDate.now());
 
@@ -96,7 +100,7 @@ public class UserService {
                     return lc;
                 });
 
-        String temporaryPassword = "password1234";
+        String temporaryPassword = INITAL_PASSWORD;
 
         credential.setPasswordHash(PasswordUtil.hash(temporaryPassword));
         credential.setEditedDate(LocalDate.now());
