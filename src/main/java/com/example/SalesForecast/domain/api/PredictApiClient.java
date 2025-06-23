@@ -1,5 +1,6 @@
 package com.example.SalesForecast.domain.api;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,12 @@ import java.util.stream.Collectors;
 @Component
 public class PredictApiClient {
 
-    private static final String FUNCTION_URL = "https://group-i-prediction.azurewebsites.net/api/predict";
-    private static final String FUNCTION_KEY = "3w_EpMFmeTC-pFgs2xi-Hbi8K919xpi15LLB20Uju1QmAzFuAuLaFw==";
+    @Value("${predict.api.url}")
+    private String FUNCTION_URL;
+
+    @Value("${predict.api.key}")
+    private String FUNCTION_KEY;
+
     // API が受け取るコード → DB 登録名
     private static final Map<String, String> TO_DB_NAME = Map.of(
             "Pale_Ale", "ペールエール",

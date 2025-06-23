@@ -2,6 +2,8 @@ package com.example.SalesForecast.domain.api;
 
 import com.example.SalesForecast.domain.weather.dto.WeatherDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -14,8 +16,13 @@ import java.util.Map;
 public class GetWeatherApiClient {
 
     /* Azure Functions エンドポイント（関数キー付き） */
-    private static final String API_URL = "https://weather-forecast-class-i.azurewebsites.net/api/get_weather"
-            + "?code=KR-r5f1TQt_31zpPaE4k6zq4QlTQWy76gdh8cVxIHPECAzFuD7sApg==";
+    @Value("${azure.api.url}")
+    private String apiUrl;
+
+    @Value("${azure.api.key}")
+    private String apiKey;
+
+    private final String API_URL = apiUrl + "?code=" + apiKey;
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper mapper = new ObjectMapper();
