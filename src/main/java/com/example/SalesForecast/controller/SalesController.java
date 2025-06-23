@@ -97,8 +97,8 @@ public class SalesController {
                 try {
                         salesService.registerSales(date, user, productIds, quantities);
                 } catch (IllegalStateException ex) {
-                        // 在庫不足や天気取得失敗などのエラーを格納
                         redirectAttributes.addFlashAttribute("error", ex.getMessage());
+                        return "redirect:/record?year=" + year + "&month=" + month + "&day=" + day;
                 }
                 return "redirect:/record?year=" + year + "&month=" + month + "&day=" + day;
         }
