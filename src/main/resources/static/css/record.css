@@ -127,6 +127,16 @@
   border: 1px solid #ddd;
 }
 
+.alert.error-message {
+  background-color: #fdd;
+  color: #900;
+  border: 1px solid #f99;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+
 /* colgroup を使うなら以下の nth-child は不要ですが、
    両方併用しても動きます */
 .product-table th:nth-child(1),
@@ -147,4 +157,9 @@
 .product-table th:nth-child(4),
 .product-table td:nth-child(4) {
   width: 20%;
+}
+
+input[type="number"] {
+  width: 95%;
+  box-sizing: border-box;
 }

@@ -70,4 +70,8 @@ public class WeatherDto {
                 ", weather='" + weather + '\'' +
                 '}';
     }
+
+    public boolean hasError() {
+        return weather != null && weather.contains("error");
+    }
 }

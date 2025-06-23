@@ -332,6 +332,11 @@ public class SalesService {
         Weather weather = weatherService.getByDate(date)
                 .orElseGet(() -> {
                     WeatherDto dto = getWeatherApiClient.fetchWeather(date);
+
+                    if (dto.hasError()) {
+                        throw new IllegalStateException("Weather API failed: " + dto.getWeather());
+                    }
+
                     Weather w = new Weather();
                     w.setDate(LocalDate.parse(dto.getDate())); // String → LocalDate に変換
                     w.setAverageTemperature(dto.getTemperature());

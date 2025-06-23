@@ -6,6 +6,9 @@
   <title>需要予測ページ</title>
   <link rel="stylesheet" th:href="@{/css/forecast.css}">
   <!-- <link rel="stylesheet" href="../static/css/forecast.css"> -->
+  <script th:src="@{/js/forecast.js}" defer></script>
+  <script th:src="@{/js/delayControl.js}" defer></script>
+  <!-- <script src="../static/js/forecast.js" defer></script> -->
 </head>
 
 <body>
@@ -26,6 +29,12 @@
 
   <!-- メインコンテンツ -->
   <main class="main-content">
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+      <div class="loading-box">
+        <div class="spinner"></div>
+        <div class="loading-text">読み込み中です。しばらくお待ちください...</div>
+      </div>
+    </div>
     <!-- トップバー -->
     <div class="topbar">
       <div class="brand">H&amp;C BAR</div>
@@ -37,19 +46,13 @@
       </div>
     </div>
 
-    <!--発注日選択 -->
+    <!-- 発注日選択 -->
     <div class="section-container">
       <h2>発注日選択</h2>
-
       <label for="order-date">発注日を選択：</label>
-      <select id="order-date" class="date-select">
-        <option value="2025-06-16">6月16日（月曜日）</option>
-        <option value="2025-06-19">6月19日（木曜日）</option>
-        <option value="2025-06-23">6月23日（月曜日）</option>
-        <option value="2025-06-26">6月26日（木曜日）</option>
+      <select id="order-date" class="date-select" th:data-current="${orderDate}" onchange="handleOrderDateChange()">
       </select>
     </div>
-
 
 
     <!-- 商品一覧表 -->
@@ -64,46 +67,15 @@
             <th>対象発注数</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody th:each="item : ${forecastItems}">
           <tr>
-            <td>ホワイトビール</td>
-            <td>35</td>
-            <td>5</td>
-            <td>30</td>
-          </tr>
-          <tr>
-            <td>ラガー</td>
-            <td>45</td>
-            <td>10</td>
-            <td>35</td>
-          </tr>
-          <tr>
-            <td>ペールエール</td>
-            <td>29</td>
-            <td>4</td>
-            <td>25</td>
-          </tr>
-          <tr>
-            <td>フルーツビール</td>
-            <td>48</td>
-            <td>5</td>
-            <td>43</td>
-          </tr>
-          <tr>
-            <td>黒ビール</td>
-            <td>38</td>
-            <td>5</td>
-            <td>33</td>
+            <td th:text="${item.beerName}">-</td>
+            <td th:text="${item.error} == null ? ${item.predictedSales} : '-'">-</td>
+            <td th:text="${item.currentInventory}">-</td>
+            <td th:text="${item.error} == null ? ${item.orderQty} : '-'">-</td>
           </tr>
         </tbody>
       </table>
-      <section class="pagination">
-        <button class="page-btn arrow" disabled>&laquo;</button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn arrow">&raquo;</button>
-      </section>
     </div>
   </main>
 </body>
