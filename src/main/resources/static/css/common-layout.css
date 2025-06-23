@@ -144,6 +144,26 @@ body {
     overflow-x: auto;
 }
 
+td.action-cell {
+  width: 35%;
+  padding: 0;              
+  text-align: center;      
+  vertical-align: middle;   
+}
+
+td.action-cell .button-row {
+  gap: 8px;                
+  display: flex;            
+  align-items: center;         
+  margin: 0;                    
+}
+
+.user-table td {                
+  vertical-align: middle;
+}
+
+
+
 .btn {
     padding: 12px 24px;
     border: none;

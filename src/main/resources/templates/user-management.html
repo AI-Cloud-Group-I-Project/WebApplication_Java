@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 
+
 <head>
   <meta charset="UTF-8">
   <title>ユーザー管理</title>
@@ -9,34 +10,38 @@
   <script th:src="@{/js/delayControl.js}" defer></script>
   <!-- <script src="../static/js/user-management.js" defer></script> -->
 
+
+  <!-- ***** メッセージ表示 ***** -->
   <script th:if="${message}" th:inline="javascript">
     /*<![CDATA[*/
-    alert(
-      /*[[${message}]]*/
-    );
+    alert(/*[[${message}]]*/);
     /*]]>*/
   </script>
 </head>
 
 
 <body>
-  <!-- サイドバー -->
+
+
+  <!-- ***** サイドバー ***** -->
   <aside class="sidebar">
     <ul class="menu">
       <li class="menu-title">メニュー一覧</li>
-      <li th:if="${login_user_role == 'admin' or login_user_role == 'user' or login_user_role == 'viewer'}"><a
-          href="/sales-weather">実績と天気の確認</a></li>
+      <li th:if="${login_user_role == 'admin' or login_user_role == 'user' or login_user_role == 'viewer'}">
+        <a href="/sales-weather">実績と天気の確認</a>
+      </li>
       <li th:if="${login_user_role == 'admin'}" class="active"><a href="/users">ユーザー管理</a></li>
       <li th:if="${login_user_role == 'admin' or login_user_role == 'user'}"><a href="/record">販売実績入力</a></li>
-      <li th:if="${login_user_role == 'admin' or login_user_role == 'user' or login_user_role == 'viewer'}"><a
-          href="/forecast">需要予測</a></li>
+      <li th:if="${login_user_role == 'admin' or login_user_role == 'user' or login_user_role == 'viewer'}">
+        <a href="/forecast">需要予測</a>
+      </li>
       <li th:if="${login_user_role == 'admin'}"><a href="/products">商品管理</a></li>
       <li th:if="${login_user_role == 'admin'}"><a href="/inventories">入荷と在庫管理</a></li>
     </ul>
   </aside>
 
 
-  <!-- メイン -->
+  <!-- ***** メイン ***** -->
   <main class="main-content">
     <div id="loading-overlay" class="loading-overlay" style="display: none;">
       <div class="loading-box">
@@ -61,7 +66,7 @@
       <div class="section-header">
         <h2>ユーザー一覧</h2>
         <label class="filter-toggle">
-          <input type="checkbox" id="showActiveOnly" onchange="toggleUserFilter()">
+          <input type="checkbox" id="showActiveOnly" onchange="toggleUserFilter()"> 
           在職中のみ表示
         </label>
       </div>
@@ -79,7 +84,7 @@
         </thead>
 
 
-        <!-- Add 行（隠し） -->
+        <!-- ▼ Add 行（非表示） -->
         <tbody>
           <tr id="addRow" style="display: none;" data-status="active">
             <td colspan="5">
@@ -101,7 +106,8 @@
                         <option value="retired">退職済み</option>
                       </select>
                     </td>
-                    <td style="width: 35%;">
+              
+                    <td class="action-cell">
                       <button class="btn submit" type="submit" name="action" value="submit">Submit</button>
                     </td>
                   </tr>
@@ -112,7 +118,7 @@
         </tbody>
 
 
-        <!-- ユーザー一覧 -->
+        <!-- ▼ ユーザー一覧 -->
         <tbody>
           <tr th:each="user : ${users}" th:attr="data-status=${user.status}">
             <td colspan="5">
@@ -133,12 +139,15 @@
                         <option value="retired" th:selected="${user.status == 'retired'}">退職済み</option>
                       </select>
                     </td>
-                    <td style="width: 35%;">
+                  
+                    <td class="action-cell">
                       <input type="hidden" name="id" th:value="${user.id}" />
-                      <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
-                      <button class="btn submit" type="submit" name="action" value="submit" disabled>Submit</button>
-                      <button class="btn reset" type="submit" th:formaction="@{/users/password-force-reset}"
-                        formmethod="post">Password Reset</button>
+                      <div class="button-row">
+                        <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
+                        <button class="btn submit" type="submit" name="action" value="submit" disabled>Submit</button>
+                        <button class="btn reset" type="submit" th:formaction="@{/users/password-force-reset}"
+                          formmethod="post">Password Reset</button>
+                      </div>
                     </td>
                   </tr>
                 </table>
