@@ -22,13 +22,11 @@ public class GetWeatherApiClient {
     @Value("${azure.api.key}")
     private String apiKey;
 
-    private final String API_URL = apiUrl + "?code=" + apiKey;
-
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper mapper = new ObjectMapper();
 
     public WeatherDto fetchWeather(LocalDate date) {
-
+        String API_URL = apiUrl + "?code=" + apiKey;
         /* (1) POST ボディ JSON を組み立て */
         Map<String, String> payload = Map.of("date", date.toString());
         String jsonBody;

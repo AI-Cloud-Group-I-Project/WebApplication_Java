@@ -191,16 +191,9 @@ VALUES
 INSERT INTO product_price_histories(product_id,price,effective_from)
 VALUES
     (1,900,'2024-01-01'),
-    (2,800,'2024-01-01');
-INSERT INTO product_price_histories(product_id,price,effective_from, effective_to)
-VALUES
-    (3,1000,'2024-01-01','2025-03-30');
-INSERT INTO product_price_histories(product_id,price,effective_from)
-VALUES
+    (2,800,'2024-01-01'),
+    (3,1000,'2024-01-01'),
     (4,1000,'2024-01-01'),
     (5,1200,'2024-01-01'),
     (6,900,'2024-01-01');
 
-INSERT INTO product_price_histories(product_id,price,effective_from)
-VALUES
-    (3,900,'2025-03-30');
