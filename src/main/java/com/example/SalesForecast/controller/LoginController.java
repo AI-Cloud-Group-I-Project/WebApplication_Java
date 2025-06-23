@@ -4,14 +4,16 @@ import com.example.SalesForecast.domain.user.service.LoginService;
 import com.example.SalesForecast.domain.user.entity.User;
 import com.example.SalesForecast.util.PasswordUtil;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 
-
 @Controller
 public class LoginController {
+    @Value("${init.password}")
+    private String INITAL_PASSWORD;
     private final LoginService loginService;
 
     public LoginController(LoginService loginService) {
@@ -23,34 +25,34 @@ public class LoginController {
         return "login";
     }
 
-    @GetMapping("/login")  
+    @GetMapping("/login")
     public String loginPage() {
         return "login";
     }
 
     @PostMapping("/login")
     public String post(@RequestParam String email,
-        @RequestParam String password,
-        Model model,
-        HttpSession session) {
-    User user = loginService.login(email, password);
-    if (user != null) {
-        session.setAttribute("username", user.getName());
-        session.setAttribute("email", user.getEmail());
-        session.setAttribute("login_user_role", user.getRole().getName());
+            @RequestParam String password,
+            Model model,
+            HttpSession session) {
+        User user = loginService.login(email, password);
+        if (user != null) {
+            session.setAttribute("username", user.getName());
+            session.setAttribute("email", user.getEmail());
+            session.setAttribute("login_user_role", user.getRole().getName());
 
-        // 初期パスワードか判定
-        String hashedInput = PasswordUtil.hash(password);
-        String initialHashed = PasswordUtil.hash("password1234");
-        if (hashedInput.equals(initialHashed)) {
-            session.setAttribute("forcePasswordReset", true);
-            return "redirect:/reset-password";
+            // 初期パスワードか判定
+            String hashedInput = PasswordUtil.hash(password);
+            String initialHashed = PasswordUtil.hash(INITAL_PASSWORD);
+            if (hashedInput.equals(initialHashed)) {
+                session.setAttribute("forcePasswordReset", true);
+                return "redirect:/reset-password";
+            }
+
+            return "redirect:/sales-weather";
+        } else {
+            model.addAttribute("error", "ログイン失敗");
+            return "login";
         }
-
-        return "redirect:/sales-weather";
-    } else {
-        model.addAttribute("error", "ログイン失敗");
-        return "login";
     }
-}
 }
