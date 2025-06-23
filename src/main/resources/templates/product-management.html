@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 
+
 <head>
   <meta charset="UTF-8">
   <title>商品管理ページ</title>
@@ -26,9 +27,9 @@
     </ul>
   </aside>
 
-  <!-- メインコンテンツ -->
+
+  <!-- ***** メインコンテンツ ***** -->
   <main class="main-content">
-    <!-- トップバー -->
     <div class="topbar">
       <div class="brand">H&amp;C BAR</div>
       <div class="topbar-right">
@@ -39,12 +40,12 @@
       </div>
     </div>
 
+
     <section class="product-section">
       <div class="section-header">
         <h2>商品管理</h2>
         <label class="filter-toggle">
-          <input type="checkbox" id="showAvailableOnly" onchange="toggleFilter()">
-          販売中のみ表示
+          <input type="checkbox" id="showAvailableOnly" onchange="toggleFilter()"> 販売中のみ表示
         </label>
       </div>
 
@@ -60,20 +61,29 @@
           </tr>
         </thead>
 
-        <tbody id="addRow" style="display: none;">
+
+        <!-- ▼ Add 行（非表示） -->
+        <tbody id="addRow" style="display:none;">
           <tr>
             <form th:action="@{/products/add}" method="post">
               <td><input type="text" name="name" placeholder="銘柄" required /></td>
               <td><input type="number" name="price" placeholder="値段" required /></td>
               <td><input type="text" name="janCode" placeholder="JANコード" required /></td>
               <td><input type="hidden" name="status" value="1" /></td>
-              <td>
-                <button class="btn submit" type="submit">Submit</button>
+
+
+              <!-- ★ action-cell を追加しボタンを中央寄せ -->
+              <td class="action-cell"> <!-- ★ -->
+                <div class="button-row">        <!-- ★ -->
+                  <button class="btn submit" type="submit">Submit</button>
+                </div>                          <!-- ★ -->
               </td>
             </form>
           </tr>
         </tbody>
 
+
+        <!-- ▼ 商品一覧 -->
         <tbody>
           <tr th:each="product : ${productList}">
             <form th:action="@{/products/update}" method="post">
@@ -83,17 +93,19 @@
               <td><input type="number" name="price" th:value="${product.price}" disabled required /></td>
               <td><input type="text" name="janCode" th:value="${product.janCode}" disabled required /></td>
               <td th:attr="data-status=${product.status.id}"
-                th:text="${product.status.id == 1 ? 'On Sale' : 'Sale Ended'}">
-              </td>
+                  th:text="${product.status.id == 1 ? 'On Sale' : 'Sale Ended'}"></td>
 
 
-              <td>
-                <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
-                <button class="btn submit" type="submit" disabled>Submit</button>
-                <button class="btn toggle" type="button" th:onclick="'toggleStatus(' + ${product.id} + ')'">
-                  <span th:text="${product.status.id == 1 ? 'Pause Sales' : 'Resume Sales'}"></span>
-                </button>
-
+              <!-- ★ 幅指定をやめ、class="action-cell" + .button-row に変更 -->
+              <td class="action-cell"> <!-- ★ -->
+                <div class="button-row"> <!-- ★ -->
+                  <button class="btn edit" type="button" onclick="enableEdit(this)">Edit</button>
+                  <button class="btn submit" type="submit" disabled>Submit</button>
+                  <button class="btn toggle" type="button"
+                          th:onclick="'toggleStatus(' + ${product.id} + ')'">
+                    <span th:text="${product.status.id == 1 ? 'Pause Sales' : 'Resume Sales'}"></span>
+                  </button>
+                </div><!-- ★ -->
               </td>
             </form>
           </tr>
@@ -104,65 +116,42 @@
         <button class="btn add" type="button" onclick="toggleAddRow()">Add</button>
       </div>
 
+
+      <!-- Pagination -->
       <section class="pagination">
-
         <a th:href="@{/products(page=${currentPage - 1})}" th:classappend="${currentPage == 0} ? ' disabled' : ''"
-          class="page-btn arrow" th:if="${totalPages > 1}">&laquo;</a>
-
-
+           class="page-btn arrow" th:if="${totalPages > 1}">&laquo;</a>
         <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
           <a th:href="@{/products(page=${i})}" th:text="${i + 1}"
-            th:class="'page-btn' + (${i} == ${currentPage} ? ' active' : '')">
-          </a>
+             th:class="'page-btn' + (${i} == ${currentPage} ? ' active' : '')"></a>
         </span>
-
-
         <a th:href="@{/products(page=${currentPage + 1})}"
-          th:classappend="${currentPage + 1 >= totalPages} ? ' disabled' : ''" class="page-btn arrow"
-          th:if="${totalPages > 1}">&raquo;</a>
+           th:classappend="${currentPage + 1 >= totalPages} ? ' disabled' : ''"
+           class="page-btn arrow" th:if="${totalPages > 1}">&raquo;</a>
       </section>
-
     </section>
   </main>
+
+
+  <!-- ***** JS ***** -->
   <script>
     function toggleStatus(productId) {
-      fetch('/products/toggleStatus/' + productId, {
-        method: 'POST'
-      }).then(response => {
-        if (response.ok) {
-          location.reload();
-        } else {
-          alert("販売状態の変更に失敗しました");
-        }
-      });
+      fetch('/products/toggleStatus/' + productId, { method: 'POST' })
+        .then(r => r.ok ? location.reload() : alert('販売状態の変更に失敗しました'));
     }
   </script>
+
+
   <script>
     function toggleFilter() {
       const checked = document.getElementById('showAvailableOnly').checked;
-      const rows = document.querySelectorAll("tbody tr");
-
-      rows.forEach(row => {
+      document.querySelectorAll("tbody tr").forEach(row => {
         const statusCell = row.querySelector("td[data-status]");
         if (!statusCell) return;
-
         const statusId = statusCell.getAttribute("data-status");
-
-        if (checked) {
-          if (statusId !== '1') {
-            row.style.display = "none";
-          } else {
-            row.style.display = "";
-          }
-        } else {
-          row.style.display = "";
-        }
+        row.style.display = (checked && statusId !== '1') ? "none" : "";
       });
     }
   </script>
-
-
-
 </body>
-
 </html>
