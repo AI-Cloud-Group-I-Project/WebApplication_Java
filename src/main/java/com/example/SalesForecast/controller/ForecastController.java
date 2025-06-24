@@ -46,6 +46,14 @@ public class ForecastController {
                 orderDate.plusDays(2));
     }
 
+    private LocalDate nextValidOrderDate(LocalDate base) {
+        while (base.getDayOfWeek() != DayOfWeek.MONDAY &&
+                base.getDayOfWeek() != DayOfWeek.THURSDAY) {
+            base = base.plusDays(1);
+        }
+        return base;
+    }
+
     @GetMapping("/forecast")
     public String showForecastPage(
             Model model,
@@ -71,7 +79,7 @@ public class ForecastController {
 
         model.addAttribute("orderDate", orderDate);
         LocalDate od = (orderDate == null)
-                ? LocalDate.now()
+                ? nextValidOrderDate(LocalDate.now()) // ← 修正！
                 : LocalDate.parse(orderDate, DateTimeFormatter.ISO_DATE);
         List<LocalDate> dates = windowDates(od);
 
